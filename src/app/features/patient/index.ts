@@ -13,3 +13,6 @@ export * from './data-access/services';
 
 // Export Components
 export * from './components';
+
+// Export Pages
+export * from './pages/home/home';

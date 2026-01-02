@@ -2,13 +2,13 @@ import { Routes } from '@angular/router';
 
 /**
  * Patient Feature Routes
- * 
+ *
  * Lazy-loaded routes for the patient feature.
  */
 export const patientRoutes: Routes = [
   {
     path: '',
-    loadComponent: () => import('./pages/users.page').then(m => m.UsersPageComponent)
+    loadComponent: () => import('./pages/home/home').then(m => m.Home)
   }
 ];
 

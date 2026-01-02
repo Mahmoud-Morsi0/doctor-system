@@ -20,7 +20,9 @@
 }
 
 /* Global Reset & Base Styles */
-
+* {
+  font-family: 'Cairo', sans-serif;
+}
 html,
 body {
   width: 100%;
