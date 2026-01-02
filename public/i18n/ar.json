@@ -36,10 +36,6 @@
     "switchLanguage": "تغيير اللغة",
     "selectLanguage": "اختر اللغة"
   },
-  "reservations": {
-    "description": "إدارة وعرض جميع الحجوزات",
-    "empty": "لا توجد حجوزات"
-  },
   "validation": {
     "required": "هذا الحقل مطلوب",
     "email": "يرجى إدخال عنوان بريد إلكتروني صحيح",
@@ -55,4 +51,3 @@
     "empty": "لا توجد مرضى"
   }
 }
-

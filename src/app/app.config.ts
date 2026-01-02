@@ -1,7 +1,16 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideAppInitializer } from '@angular/core';
+import {
+  ApplicationConfig,
+  provideBrowserGlobalErrorListeners,
+  provideAppInitializer,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { provideTransloco, TranslocoService, TranslocoLoader, Translation } from '@jsverse/transloco';
+import {
+  provideTransloco,
+  TranslocoService,
+  TranslocoLoader,
+  Translation,
+} from '@jsverse/transloco';
 import { provideTranslocoLocale } from '@jsverse/transloco-locale';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom, Observable } from 'rxjs';
@@ -10,6 +19,7 @@ import { inject } from '@angular/core';
 import { routes } from './app.routes';
 import { providePrimeNG } from 'primeng/config';
 import { LanguageService } from './core/services';
+import aura from '@primeuix/themes/aura';
 
 /**
  * Transloco HTTP Loader
@@ -30,14 +40,15 @@ import { LanguageService } from './core/services';
 export class HttpLoader implements TranslocoLoader {
   private http = inject(HttpClient);
 
-  getTranslation(lang: string, data?: { scope?: string }): Observable<Translation> {
-    // If scope is provided, it's a scoped translation (lazy-loaded feature)
-    // Example: scope = 'dashboard' -> loads /i18n/en/dashboard.json
-    const path = data?.scope
-      ? `/i18n/${lang}/${data.scope}.json`
-      : `/i18n/${lang}.json`;
+  getTranslation(langOrScope: string): Observable<Translation> {
+    // Check if this is a scoped translation (format: "scope/lang")
+    if (langOrScope.includes('/')) {
+      const [scope, lang] = langOrScope.split('/');
+      return this.http.get<Translation>(`/i18n/${lang}/${scope}.json`);
+    }
 
-    return this.http.get<Translation>(path);
+    // Regular global translation
+    return this.http.get<Translation>(`/i18n/${langOrScope}.json`);
   }
 }
 
@@ -54,7 +65,7 @@ export function translocoInitializer() {
   const languageService = inject(LanguageService);
 
   const savedLanguage = localStorage.getItem('language') || 'en';
-  const lang = (savedLanguage === 'en' || savedLanguage === 'ar') ? savedLanguage : 'en';
+  const lang = savedLanguage === 'en' || savedLanguage === 'ar' ? savedLanguage : 'en';
 
   // Set active language in Transloco
   transloco.setActiveLang(lang);
@@ -87,12 +98,12 @@ export const appConfig: ApplicationConfig = {
         missingHandler: {
           // Log missing translations in development
           logMissingKey: true,
-          useFallbackTranslation: true // Use fallback language if key missing
+          useFallbackTranslation: true, // Use fallback language if key missing
         },
         // Production optimizations
         prodMode: false, // Set to true in production for better performance
       },
-      loader: HttpLoader
+      loader: HttpLoader,
     }),
 
     // Transloco Locale Configuration
@@ -100,8 +111,8 @@ export const appConfig: ApplicationConfig = {
     provideTranslocoLocale({
       langToLocaleMapping: {
         en: 'en-US',
-        ar: 'ar-SA'
-      }
+        ar: 'ar-SA',
+      },
     }),
 
     // Initialize Transloco before app starts
@@ -111,13 +122,14 @@ export const appConfig: ApplicationConfig = {
 
     providePrimeNG({
       theme: {
+        preset: aura,
         options: {
           prefix: 'p',
           darkModeSelector: 'false',
           cssLayer: false,
           overlayAppendTo: 'body',
-        }
+        },
       },
-    })
-  ]
+    }),
+  ],
 };

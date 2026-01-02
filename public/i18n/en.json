@@ -36,10 +36,7 @@
     "switchLanguage": "Switch Language",
     "selectLanguage": "Select Language"
   },
-  "reservations": {
-    "description": "Manage and view all reservations",
-    "empty": "No reservations found"
-  },
+
   "validation": {
     "required": "This field is required",
     "email": "Please enter a valid email address",
@@ -55,4 +52,3 @@
     "empty": "No patients found"
   }
 }
-

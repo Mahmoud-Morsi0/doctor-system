@@ -1,8 +1,10 @@
-<div class="font-black">
-  <h1>Reservations</h1>
-  <p>
-    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sint, minus. Voluptatibus at
-    voluptatum consequuntur dolor repellendus accusantium illo dignissimos iure dicta. Cumque
-    suscipit earum blanditiis nemo, numquam distinctio sit architecto.
-  </p>
+<div class="p-8" *transloco="let t; scope: 'reservation'">
+  <div class="mb-4">
+    <div>
+      <h1 class="text-3xl font-bold mb-2 text-primary-500">
+        {{ t('reservation.title') }}
+      </h1>
+      <p class="text-xl text-gray-500">Clinic / Reservation</p>
+    </div>
+  </div>
 </div>
