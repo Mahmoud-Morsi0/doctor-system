@@ -1,1 +1,10 @@
-<p>home works!</p>
+<!-- Using scoped translations from /i18n/{lang}/patient.json -->
+<!-- Method 1: Using transloco directive with scope -->
+<div *transloco="let t; scope: 'patient'">
+  <p class="text-primary-500 text-2xl font-bold">{{ t('title') }}</p>
+  <p class="text-primary-500 text-2xl font-bold">{{ t('welcome') }}</p>
+  <p class="text-primary-500 text-2xl font-bold">{{ t('description') }}</p>
+</div>
+
+<!-- Method 2: Using pipe with scope parameter (alternative) -->
+<!-- <p class="text-primary-500 text-2xl font-bold">{{ 'title' | transloco: {}: 'patient' }}</p> -->
