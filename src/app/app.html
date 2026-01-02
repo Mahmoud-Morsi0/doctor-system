@@ -1,2 +1,10 @@
-<h1 class="text-3xl font-bold underline mb-4">{{ title() }}</h1>
-<p-button label="Submit" class="bg-blue-500 text-white p-1 rounded-md" />
+<div class="container mx-auto p-4">
+  <header class="flex justify-between items-center">
+    <h1 class="text-3xl font-bold">{{ 'app.title' | transloco }}</h1>
+    <app-language-switcher></app-language-switcher>
+  </header>
+
+  <main>
+    <router-outlet></router-outlet>
+  </main>
+</div>

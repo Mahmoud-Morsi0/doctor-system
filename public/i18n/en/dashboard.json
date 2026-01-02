@@ -1,0 +1,14 @@
+{
+  "title": "Dashboard",
+  "welcome": "Welcome to Dashboard",
+  "stats": {
+    "totalUsers": "Total Users",
+    "activeUsers": "Active Users",
+    "totalRevenue": "Total Revenue"
+  },
+  "actions": {
+    "viewDetails": "View Details",
+    "exportData": "Export Data"
+  }
+}
+

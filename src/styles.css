@@ -1,4 +1,39 @@
-/* You can add global styles to this file, and also import other style files */
-
+/* Global Styles */
 @import 'tailwindcss';
 @import 'tailwindcss-primeui';
+
+/* RTL Support - Automatically applied by LanguageService */
+.rtl {
+  direction: rtl;
+}
+
+.ltr {
+  direction: ltr;
+}
+
+/* Example: RTL-specific adjustments */
+.rtl .text-left {
+  text-align: right;
+}
+
+.rtl .text-right {
+  text-align: left;
+}
+
+/* RTL margin/padding utilities */
+.rtl .ml-auto {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.rtl .mr-auto {
+  margin-right: 0;
+  margin-left: auto;
+}
+* {
+  font-family: 'Cairo', sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings: 'slnt' 0;
+}
