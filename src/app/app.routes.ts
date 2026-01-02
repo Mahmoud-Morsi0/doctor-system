@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 
 /**
  * Application Routes
- * 
+ *
  * Main routing configuration with lazy-loaded feature modules.
  * All routes are lazy-loaded for better performance.
  */

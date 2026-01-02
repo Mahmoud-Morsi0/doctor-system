@@ -21,14 +21,15 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { User } from '../data-access/services/create-user.service';
+import { TranslocoPipe } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-users-page',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslocoPipe],
   template: `
     <div class="users-page">
-      <h1>Users Management</h1>
+      <h1>{{ 'patients.management' | transloco }}</h1>
 
       <div class="users-list">
           <!-- <app-user-card
@@ -38,20 +39,8 @@ import { User } from '../data-access/services/create-user.service';
           /> -->
       </div>
 
-      <div class="add-user-form">
-        <input
-          type="text"
-          placeholder="Name"
-          [value]="newUserName()"
-          (input)="newUserName.set($any($event.target).value)"
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          [value]="newUserEmail()"
-          (input)="newUserEmail.set($any($event.target).value)"
-        />
-        <button (click)="onAddUser()" type="button">Add User</button>
+      <div class="empty-user-list">
+        <p>{{ 'patients.empty' | transloco }}</p>
       </div>
     </div>
   `,
