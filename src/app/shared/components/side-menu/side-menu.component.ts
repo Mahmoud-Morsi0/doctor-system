@@ -57,7 +57,7 @@ export interface MenuItem {
         </div>
         <button
           type="button"
-          class="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-white/10 text-slate-300 transition-all duration-200 hover:bg-white/15 hover:text-white collapsed:absolute collapsed:top-4 collapsed:right-2 rtl:collapsed:right-auto rtl:collapsed:left-2 relative z-1000 top-0 right-[-32px]"
+          class="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-white/10 text-slate-300 transition-all duration-200 hover:bg-white/15 hover:text-white collapsed:absolute collapsed:top-4 collapsed:right-2 rtl:collapsed:right-auto rtl:collapsed:left-2"
           (click)="toggleSidebar()"
           [attr.aria-label]="sidebarService.isCollapsed() ? 'Expand sidebar' : 'Collapse sidebar'"
           [attr.title]="sidebarService.isCollapsed() ? 'Expand' : 'Collapse'"
