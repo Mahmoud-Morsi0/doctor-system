@@ -7,5 +7,8 @@
   "status": "Status",
   "date": "Date",
   "startTime": "Start Time",
-  "durationMinutes": "Duration Minutes"
+  "durationMinutes": "Duration Minutes",
+  "searchPlaceholder": "Search by patient name or phone",
+  "newReservation": "New Reservation",
+  "editReservation": "Edit Reservation"
 }
