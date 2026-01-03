@@ -33,6 +33,7 @@
   },
   "menu": {
     "dashboard": "لوحة التحكم",
+    "appointments": "المواعيد",
     "reservations": "الزيارات",
     "patients": "المرضى",
     "employees": "الموظفون"

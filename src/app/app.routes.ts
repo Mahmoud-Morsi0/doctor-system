@@ -37,6 +37,11 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./features/employee/employee.routes').then((m) => m.employeeRoutes),
       },
+      {
+        path: 'appointments',
+        loadChildren: () =>
+          import('./features/appointment/appointment.routes').then((m) => m.appointmentRoutes),
+      },
     ],
   },
   {

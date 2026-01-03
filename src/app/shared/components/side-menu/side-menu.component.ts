@@ -133,8 +133,14 @@ export class SideMenuComponent {
       translationKey: 'menu.dashboard'
     },
     {
-      label: 'Reservations',
+      label: 'Appointments',
       icon: 'pi pi-calendar',
+      route: '/appointments',
+      translationKey: 'menu.appointments'
+    },
+    {
+      label: 'Reservations',
+      icon: 'pi pi-calendar-clock',
       route: '/reservations',
       translationKey: 'menu.reservations'
     },

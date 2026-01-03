@@ -1,0 +1,315 @@
+<div class="p-8 bg-slate-50 min-h-screen" *transloco="let t; scope: 'appointment'">
+  <!-- Header -->
+  <div class="mb-6 flex items-center justify-between">
+    <h1 class="text-2xl font-bold text-slate-900">
+      {{ t('appointment.title') }}
+    </h1>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="mb-6 space-y-4">
+    <!-- Status Legend & Actions Row -->
+    <div class="flex items-center justify-between">
+      <!-- Status Legend -->
+      <div class="flex items-center gap-6">
+        <div class="flex items-center gap-2">
+          <div class="h-3 w-3 rounded-full bg-green-500"></div>
+          <span class="text-sm text-slate-700">{{ t('appointment.status.complete') }}</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="h-3 w-3 rounded-full bg-blue-500"></div>
+          <span class="text-sm text-slate-700">{{ t('appointment.status.upcoming') }}</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="h-3 w-3 rounded-full bg-orange-500"></div>
+          <span class="text-sm text-slate-700">{{ t('appointment.status.pending') }}</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="h-3 w-3 rounded-full bg-red-500"></div>
+          <span class="text-sm text-slate-700">{{ t('appointment.status.cancel') }}</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-3">
+        <p-button
+          [icon]="'pi pi-filter'"
+          [outlined]="true"
+          [text]="true"
+          [style]="{ 'min-width': 'auto', padding: '0.5rem' }"
+        />
+        <p-button
+          [icon]="'pi pi-list'"
+          [outlined]="true"
+          [text]="true"
+          [style]="{ 'min-width': 'auto', padding: '0.5rem' }"
+        />
+        <p-button
+          [label]="t('appointment.export')"
+          [icon]="'pi pi-download'"
+          [outlined]="true"
+          styleClass="border-slate-300 text-slate-700"
+        />
+        <p-button
+          [label]="t('appointment.createAppointment')"
+          [icon]="'pi pi-plus'"
+          severity="success"
+          (onClick)="openCreateDrawer()"
+        />
+      </div>
+    </div>
+
+    <!-- Date Navigation & View Switcher -->
+    <div class="flex items-center justify-between">
+      <!-- Date Navigation -->
+      <div class="flex items-center gap-3">
+        <button
+          type="button"
+          (click)="previousPeriod()"
+          class="flex h-9 w-9 items-center justify-center rounded border border-slate-300 bg-white text-slate-700 transition-colors hover:bg-slate-50"
+          [attr.aria-label]="t('appointment.common.previous')"
+        >
+          <i class="pi pi-chevron-left text-sm"></i>
+        </button>
+        <button
+          type="button"
+          (click)="goToToday()"
+          class="rounded border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50"
+        >
+          {{ t('appointment.today') }}
+        </button>
+        <button
+          type="button"
+          (click)="nextPeriod()"
+          class="flex h-9 w-9 items-center justify-center rounded border border-slate-300 bg-white text-slate-700 transition-colors hover:bg-slate-50"
+          [attr.aria-label]="t('common.next')"
+        >
+          <i class="pi pi-chevron-right text-sm"></i>
+        </button>
+        <div class="flex items-center gap-2 rounded border border-slate-300 bg-white px-4 py-2">
+          <span class="text-sm font-medium text-slate-900">{{ getFormattedDate() }}</span>
+          <i class="pi pi-chevron-down text-xs text-slate-500"></i>
+        </div>
+      </div>
+
+      <!-- View Switcher -->
+      <div class="flex items-center gap-1 rounded-lg border border-slate-300 bg-white p-1">
+        <button
+          type="button"
+          (click)="setView('daily')"
+          [class.bg-primary-600]="currentView() === 'daily'"
+          [class.text-white]="currentView() === 'daily'"
+          [class.text-slate-700]="currentView() !== 'daily'"
+          class="rounded px-4 py-1.5 text-sm font-medium transition-colors hover:bg-slate-100"
+        >
+          {{ t('appointment.view.daily') }}
+        </button>
+        <button
+          type="button"
+          (click)="setView('weekly')"
+          [class.bg-primary-600]="currentView() === 'weekly'"
+          [class.text-white]="currentView() === 'weekly'"
+          [class.text-slate-700]="currentView() !== 'weekly'"
+          class="rounded px-4 py-1.5 text-sm font-medium transition-colors hover:bg-slate-100"
+        >
+          {{ t('appointment.view.weekly') }}
+        </button>
+        <button
+          type="button"
+          (click)="setView('monthly')"
+          [class.bg-primary-600]="currentView() === 'monthly'"
+          [class.text-white]="currentView() === 'monthly'"
+          [class.text-slate-700]="currentView() !== 'monthly'"
+          class="rounded px-4 py-1.5 text-sm font-medium transition-colors hover:bg-slate-100"
+        >
+          {{ t('appointment.view.monthly') }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Calendar Grid -->
+  <div class="min-w-[800px] overflow-x-auto">
+    <div class="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
+      <!-- Calendar Header (Day Names) -->
+      <div class="grid grid-cols-7 border-b border-slate-200">
+        @for (dayName of getDayNames(); track dayName) {
+        <div
+          class="border-r border-slate-200 p-3 text-center text-sm font-semibold text-slate-700 last:border-r-0"
+        >
+          {{ dayName }}
+        </div>
+        }
+      </div>
+
+      <!-- Calendar Grid -->
+      <div class="grid grid-cols-7">
+        @for (day of calendarDays(); track day.date.getTime()) {
+        <div
+          class="min-h-[120px] border-b border-r border-slate-200 p-2 transition-colors hover:bg-slate-50 last:border-r-0 cursor-pointer"
+          [class.bg-slate-50]="!day.isCurrentMonth"
+          [class.bg-green-50]="day.isToday"
+          (click)="openDayAppointments(day.date)"
+        >
+          <!-- Date Number -->
+          <div class="mb-2 flex items-center justify-between">
+            <span
+              class="text-sm font-medium"
+              [class.text-slate-400]="!day.isCurrentMonth"
+              [class.text-slate-900]="day.isCurrentMonth && !day.isToday"
+              [class.text-white]="day.isToday"
+            >
+              @if (day.isToday) {
+              <span
+                class="flex h-7 w-7 items-center justify-center rounded-full bg-green-500 text-sm font-semibold"
+              >
+                {{ day.date.getDate() }}
+              </span>
+              } @else {
+              {{ day.date.getDate() }}
+              }
+            </span>
+          </div>
+
+          <!-- Appointments -->
+          <div class="space-y-1">
+            @for (appointment of day.appointments; track appointment.id) {
+            <div
+              class="group cursor-pointer rounded border-l-4 px-2 py-1 text-xs transition-colors hover:shadow-sm"
+              [class]="getStatusColorClass(appointment.status)"
+              [title]="appointment.patientName + ' - ' + appointment.startTime"
+            >
+              <div class="flex items-center gap-1.5">
+                <div
+                  class="h-2 w-2 rounded-full"
+                  [class]="getStatusDotColor(appointment.status)"
+                ></div>
+                <span class="font-medium text-slate-900">{{ appointment.patientName }}</span>
+              </div>
+              <div class="mt-0.5 text-xs text-slate-600">
+                {{ appointment.startTime }}
+              </div>
+            </div>
+            }
+
+            <!-- Overflow Indicator -->
+            @if (day.overflowCount && day.overflowCount > 0) {
+            <div class="mt-1 text-right">
+              <button
+                type="button"
+                (click)="openDayAppointments(day.date); $event.stopPropagation()"
+                class="text-xs font-medium text-primary-600 hover:text-primary-700 hover:underline"
+              >
+                +{{ day.overflowCount }} {{ t('appointment.more') }}
+              </button>
+            </div>
+            }
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Appointment Drawer -->
+  <p-drawer
+    [header]="t('appointment.createAppointment')"
+    [visible]="visible()"
+    (onHide)="visible.set(false)"
+    [position]="drawerPosition()"
+    [style]="{ width: '30%', 'min-width': '300px' }"
+  >
+    <p>
+      {{ t('appointment.createFormPlaceholder') }}
+    </p>
+  </p-drawer>
+
+  <!-- Day Appointments Drawer -->
+  <p-drawer
+    [header]="t('appointment.dayAppointments')"
+    [visible]="dayAppointmentsVisible()"
+    (onHide)="closeDayAppointments()"
+    [position]="drawerPosition()"
+    [style]="{ width: '40%', 'min-width': '400px' }"
+  >
+    <div class="space-y-4">
+      @if (selectedDayAppointments().length === 0) {
+      <div class="flex flex-col items-center justify-center py-12 text-center">
+        <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-100">
+          <i class="pi pi-calendar-times text-3xl text-slate-400"></i>
+        </div>
+        <p class="text-lg font-semibold text-slate-700">{{ t('appointment.noAppointments') }}</p>
+      </div>
+      } @else { @for (appointment of selectedDayAppointments(); track appointment.id) {
+      <div
+        class="rounded-lg border border-slate-200 p-4 transition-shadow hover:shadow-md"
+        [class]="getStatusColorClass(appointment.status)"
+      >
+        <div class="flex items-start justify-between gap-4">
+          <div class="flex-1">
+            <div class="mb-2 flex items-center gap-2">
+              <div
+                class="h-2 w-2 rounded-full"
+                [class]="getStatusDotColor(appointment.status)"
+              ></div>
+              <h3 class="text-lg font-semibold text-slate-900">{{ appointment.patientName }}</h3>
+            </div>
+            <div class="space-y-1 text-sm text-slate-600">
+              <div class="flex items-center gap-2">
+                <i class="pi pi-clock text-xs"></i>
+                <span>{{ appointment.startTime }}</span>
+                @if (appointment.endTime) {
+                <span>-</span>
+                <span>{{ appointment.endTime }}</span>
+                }
+                <span
+                  >({{ appointment.durationMinutes }}
+                  {{
+                    t('appointment.view.daily') === t('appointment.view.daily') ? 'mins' : 'دقيقة'
+                  }})</span
+                >
+              </div>
+              @if (appointment.clinic) {
+              <div class="flex items-center gap-2">
+                <i class="pi pi-building text-xs"></i>
+                <span>{{ appointment.clinic.name }}</span>
+                @if (appointment.clinic.room) {
+                <span>-</span>
+                <span>{{ appointment.clinic.room }}</span>
+                }
+              </div>
+              } @if (appointment.dentist) {
+              <div class="flex items-center gap-2">
+                <i class="pi pi-user text-xs"></i>
+                <span>{{ appointment.dentist.name }}</span>
+              </div>
+              } @if (appointment.notes) {
+              <div class="mt-2 text-xs text-slate-500">
+                <i class="pi pi-comment text-xs"></i>
+                {{ appointment.notes }}
+              </div>
+              }
+            </div>
+          </div>
+          <div class="flex flex-col items-end gap-2">
+            <p-tag
+              [value]="getStatusLabel(appointment.status)"
+              [severity]="getStatusSeverity(appointment.status)"
+              [rounded]="true"
+            ></p-tag>
+            <select
+              [value]="appointment.status"
+              (change)="changeAppointmentStatus(appointment.id, $any($event.target).value)"
+              class="rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            >
+              @for (option of statusOptions; track option.value) {
+              <option [value]="option.value">{{ t('appointment.status.' + option.value) }}</option>
+              }
+            </select>
+          </div>
+        </div>
+      </div>
+      } }
+    </div>
+  </p-drawer>
+</div>

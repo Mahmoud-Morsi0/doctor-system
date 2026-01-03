@@ -1,0 +1,23 @@
+{
+  "title": "المواعيد",
+  "createAppointment": "إنشاء موعد",
+  "export": "تصدير",
+  "today": "اليوم",
+  "more": "المزيد",
+  "dayAppointments": "مواعيد اليوم",
+  "noAppointments": "لا توجد مواعيد لهذا اليوم",
+  "changeStatus": "تغيير الحالة",
+  "status": {
+    "complete": "مكتمل",
+    "upcoming": "قادم",
+    "pending": "قيد الانتظار",
+    "cancel": "ملغي"
+  },
+  "view": {
+    "daily": "يومي",
+    "weekly": "أسبوعي",
+    "monthly": "شهري"
+  },
+  "createFormPlaceholder": "سيتم تنفيذ نموذج إنشاء الموعد هنا"
+}
+

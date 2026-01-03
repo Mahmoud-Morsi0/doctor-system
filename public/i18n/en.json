@@ -33,6 +33,7 @@
   },
   "menu": {
     "dashboard": "Dashboard",
+    "appointments": "Appointments",
     "reservations": "Visits",
     "patients": "Patients",
     "employees": "Employees"

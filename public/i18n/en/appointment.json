@@ -1,0 +1,23 @@
+{
+  "title": "Appointments",
+  "createAppointment": "Create Appointment",
+  "export": "Export",
+  "today": "Today",
+  "more": "more",
+  "dayAppointments": "Day Appointments",
+  "noAppointments": "No appointments for this day",
+  "changeStatus": "Change Status",
+  "status": {
+    "complete": "Complete",
+    "upcoming": "Upcoming",
+    "pending": "Pending",
+    "cancel": "Cancel"
+  },
+  "view": {
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "monthly": "Monthly"
+  },
+  "createFormPlaceholder": "Appointment creation form will be implemented here"
+}
+
