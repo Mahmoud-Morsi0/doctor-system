@@ -31,8 +31,8 @@ export interface MenuItem {
   imports: [CommonModule, RouterModule, TranslocoModule, LanguageSwitcherComponent],
   template: `
     <aside
-      class="fixed left-0 top-0 z-1000 flex h-screen flex-col bg-slate-800 border-r border-slate-300 transition-[width] duration-200 ease-in-out"
-      [style.width]="sidebarService.isCollapsed() ? '80px' : 'clamp(250px, 30vw, 350px)'"
+      class="fixed left-0 top-0 z-1000 flex h-screen flex-col bg-white border-r border-primary-300 transition-[width] duration-200 ease-in-out"
+      [style.width]="sidebarService.isCollapsed() ? '80px' : 'clamp(250px, 30vw, 250px)'"
       [class.collapsed]="sidebarService.isCollapsed()"
       [class.rtl]="languageService.isRTL()"
       [class.right-0]="languageService.isRTL()"
@@ -43,11 +43,11 @@ export interface MenuItem {
       <!-- Logo/Header -->
       <div class="relative flex h-[70px] items-center gap-2 border-b border-white/10 px-4 py-4 collapsed:justify-center collapsed:px-4">
         <div class="flex flex-1 items-center gap-4 min-w-0 collapsed:flex-none collapsed:w-full collapsed:justify-center">
-          <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-blue-500 text-xl font-bold text-white">
+          <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-primary-600 to-primary-500 text-xl font-bold text-white">
             B
           </div>
           <span
-            class="text-xl font-semibold text-white whitespace-nowrap overflow-hidden transition-[opacity,width] duration-200 ease-in-out"
+            class="text-xl font-semibold text-primary-600 whitespace-nowrap overflow-hidden transition-[opacity,width] duration-200 ease-in-out"
             [class.w-0]="sidebarService.isCollapsed()"
             [class.opacity-0]="sidebarService.isCollapsed()"
             *transloco="let t"
@@ -57,34 +57,35 @@ export interface MenuItem {
         </div>
         <button
           type="button"
-          class="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-white/10 text-slate-300 transition-all duration-200 hover:bg-white/15 hover:text-white collapsed:absolute collapsed:top-4 collapsed:right-2 rtl:collapsed:right-auto rtl:collapsed:left-2"
+          class="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-primary-100 text-primary-600 transition-all duration-200 hover:bg-primary-200 hover:text-primary-700 collapsed:absolute collapsed:top-4 collapsed:right-2 rtl:collapsed:right-auto rtl:collapsed:left-2"
           (click)="toggleSidebar()"
           [attr.aria-label]="sidebarService.isCollapsed() ? 'Expand sidebar' : 'Collapse sidebar'"
           [attr.title]="sidebarService.isCollapsed() ? 'Expand' : 'Collapse'"
         >
-          <span
-            class="inline-block text-base transition-transform duration-200"
+          <i
+            [class]="sidebarService.isCollapsed() ? 'pi pi-angle-right' : 'pi pi-angle-left'"
+            class="text-base transition-transform duration-200 text-primary-600"
             [class.rotate-180]="(!languageService.isRTL() && sidebarService.isCollapsed()) || (languageService.isRTL() && !sidebarService.isCollapsed())"
-          >
-            {{ sidebarService.isCollapsed() ? '→' : '←' }}
-          </span>
+          ></i>
         </button>
       </div>
 
       <!-- Navigation Menu -->
       <nav class="flex-1 overflow-y-auto py-4 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-sm [&::-webkit-scrollbar-thumb]:bg-white/20 hover:[&::-webkit-scrollbar-thumb]:bg-white/30">
         <ul class="m-0 list-none p-0">
-          <li *ngFor="let item of menuItems" class="m-0">
+
+          @for (item of menuItems; track item.route) {
+            <li class="m-0">
             <a
               [routerLink]="item.route"
-              routerLinkActive="bg-white/10 font-semibold text-white before:w-0.5"
+              routerLinkActive="bg-primary-100 font-semibold text-primary-600 before:w-0.5"
               [routerLinkActiveOptions]="{ exact: item.route === '/' }"
               [class.justify-center]="sidebarService.isCollapsed()"
               [class.px-4]="sidebarService.isCollapsed()"
-              class="relative flex h-12 items-center gap-4 px-4 py-4 text-slate-300 no-underline transition-all duration-200 hover:bg-white/5 hover:text-white before:absolute before:left-0 before:top-0 before:bottom-0 before:w-0 before:bg-blue-600 before:transition-all before:duration-200 rtl:before:left-auto rtl:before:right-0"
+              class=" relative flex h-12 items-center gap-4 px-8 py-4 text-primary-600 no-underline transition-all duration-200 hover:bg-primary-100 hover:text-primary-700 before:absolute before:left-0 before:top-0 before:bottom-0 before:w-0 before:bg-primary-600 before:transition-all before:duration-200 rtl:before:left-auto rtl:before:right-0"
               [title]="item.label"
             >
-              <span class="flex h-6 w-6 shrink-0 items-center justify-center text-xl">{{ item.icon }}</span>
+              <i [class]="item.icon" class="text-xl text-primary-600"></i>
               <span
                 class="text-[0.9375rem] whitespace-nowrap overflow-hidden transition-[opacity,width] duration-200 ease-in-out"
                 [class.w-0]="sidebarService.isCollapsed()"
@@ -93,8 +94,9 @@ export interface MenuItem {
               >
                 {{ t(item.translationKey) }}
               </span>
-            </a>
-          </li>
+              </a>
+            </li>
+          }
         </ul>
       </nav>
 
@@ -126,25 +128,25 @@ export class SideMenuComponent {
   protected readonly menuItems: MenuItem[] = [
     {
       label: 'Dashboard',
-      icon: '📊',
+      icon: 'pi pi-home',
       route: '/dashboard',
       translationKey: 'menu.dashboard'
     },
     {
       label: 'Reservations',
-      icon: '📅',
+      icon: 'pi pi-calendar',
       route: '/reservations',
       translationKey: 'menu.reservations'
     },
     {
       label: 'Patients',
-      icon: '👥',
+      icon: 'pi pi-users',
       route: '/patients',
       translationKey: 'menu.patients'
     },
     {
       label: 'Employees',
-      icon: '👤',
+      icon: 'pi pi-user',
       route: '/employees',
       translationKey: 'menu.employees'
     }
