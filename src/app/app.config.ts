@@ -134,7 +134,7 @@ export const appConfig: ApplicationConfig = {
           useFallbackTranslation: true, // Use fallback language if key missing
         },
         // Production optimizations
-        prodMode: false, // Set to true in production for better performance
+        prodMode: true, // Enabled for better performance and smaller bundle size
       },
       loader: HttpLoader,
     }),

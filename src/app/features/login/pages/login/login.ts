@@ -5,10 +5,8 @@ import { form, Field, required, email } from '@angular/forms/signals';
 import { TranslocoModule } from '@jsverse/transloco';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { LanguageService } from '../../../../core/services';
 import { PasswordModule } from 'primeng/password';
-import { FormsModule } from '@angular/forms';
-import { InputTextModule as PrimeInputTextModule } from 'primeng/inputtext';
+import { LanguageService } from '../../../../core/services';
 /**
  * Login Page Component
  *
@@ -26,9 +24,8 @@ import { InputTextModule as PrimeInputTextModule } from 'primeng/inputtext';
     Field,
     TranslocoModule,
     ButtonModule,
+    InputTextModule,
     PasswordModule,
-    FormsModule,
-    PrimeInputTextModule,
   ],
   templateUrl: './login.html',
   styleUrl: './login.css',
