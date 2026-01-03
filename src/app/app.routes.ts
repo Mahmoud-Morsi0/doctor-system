@@ -13,6 +13,11 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
   {
+    path: 'login',
+    loadChildren: () =>
+      import('./features/login/login.routes').then((m) => m.loginRoutes),
+  },
+  {
     path: '',
     loadComponent: () =>
       import('./layout/main-layout.component').then((m) => m.MainLayoutComponent),

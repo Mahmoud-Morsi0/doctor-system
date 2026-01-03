@@ -54,7 +54,19 @@
   "employees": {
     "management": "Employees Management",
     "empty": "No employees found"
+  },
+  "login": {
+    "welcome": "Welcome to",
+    "title": "Dental Clinic",
+    "emailLabel": "Email",
+    "emailPlaceholder": "example@domain.com",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Password",
+    "forgotPassword": "Forgot password",
+    "submitButton": "Login",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "imagePlaceholder": "Image placeholder"
   }
-
 
 }

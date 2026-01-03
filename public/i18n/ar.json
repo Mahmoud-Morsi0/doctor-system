@@ -62,5 +62,18 @@
     "title": "المريض",
     "welcome": "مرحبا بك في المريض",
     "description": "المريض هو الشخص الذي يحضر المستشفى للحصول على الرعاية الطبية"
+  },
+  "login": {
+    "welcome": "مرحباً بك في",
+    "title": "عيادة الأسنان",
+    "emailLabel": "عنوان البريد الإلكتروني",
+    "emailPlaceholder": "مثال@domain.com",
+    "passwordLabel": "كلمة المرور",
+    "passwordPlaceholder": "كلمة المرور",
+    "forgotPassword": "نسيت كلمة المرور",
+    "submitButton": "تسجيل الدخول",
+    "showPassword": "إظهار كلمة المرور",
+    "hidePassword": "إخفاء كلمة المرور",
+    "imagePlaceholder": "صورة مؤقتة"
   }
 }

@@ -1,0 +1,86 @@
+<div
+  class="flex h-screen w-screen overflow-hidden bg-white"
+  *transloco="let t"
+  [attr.dir]="direction()"
+>
+  <!-- Left Section: Login Form -->
+  <div class="flex w-full flex-col items-center justify-center bg-white px-6 py-12 md:w-3/6 h-full">
+    <div class="w-full max-w-md">
+      <!-- Logo -->
+      <div class="mb-8 flex justify-center">
+        <div class="flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
+          <i class="pi pi-leaf text-3xl text-gray-800"></i>
+        </div>
+      </div>
+
+      <!-- Welcome Message -->
+      <div class="mb-10 text-center">
+        <p class="mb-2 text-base font-light text-gray-600">{{ t('login.welcome') }}</p>
+        <h1 class="text-3xl font-bold text-gray-900">{{ t('login.title') }}</h1>
+      </div>
+
+      <!-- Login Form -->
+      <form (ngSubmit)="handleSubmit($event)" class="space-y-6">
+        <!-- Email Input -->
+        <div>
+          <label for="email" class="mb-2 block text-sm font-medium text-gray-700">
+            {{ t('login.emailLabel') }}
+          </label>
+          <input
+            [field]="loginForm.email"
+            id="email"
+            type="email"
+            [placeholder]="t('login.emailPlaceholder')"
+            class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 placeholder-gray-400 transition-colors focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+          />
+        </div>
+
+        <!-- Password Input -->
+        <div class="w-full">
+          <label for="password" class="mb-2 block text-sm font-medium text-gray-700">
+            {{ t('login.passwordLabel') }}
+          </label>
+          <p-password
+            [id]="'password'"
+            [name]="'password'"
+            [field]="loginForm.password"
+            [toggleMask]="true"
+            [feedback]="false"
+            fluid
+          />
+        </div>
+
+        <!-- Forgot Password Link -->
+        <div class="flex justify-end">
+          <a
+            href="#"
+            class="text-sm text-gray-600 underline transition-colors hover:text-primary-600"
+          >
+            {{ t('login.forgotPassword') }}
+          </a>
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          [disabled]="loginForm().invalid()"
+          class="w-full rounded-full bg-primary-600 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 cursor-pointer"
+        >
+          {{ t('login.submitButton') }}
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Right Section: Aesthetic Image -->
+  <div class="w-3/6 flex items-center justify-center p-6">
+    <div class="h-full w-full rounded-lg flex flex-col items-center justify-center bg-gray-200">
+      <!-- Placeholder Icon -->
+      <div class="mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-gray-300">
+        <i class="pi pi-image text-4xl text-gray-400"></i>
+      </div>
+      <!-- Placeholder Text -->
+      <p class="text-sm text-gray-500">{{ t('login.imagePlaceholder') }}</p>
+    </div>
+  </div>
+</div>
