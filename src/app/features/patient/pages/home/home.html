@@ -140,7 +140,7 @@
     [header]="t('patient.newPatient')"
     [visible]="visible()"
     (onHide)="visible.set(false)"
-    position="top"
+    [position]="drawerPosition()"
   >
     <p>
       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
@@ -152,7 +152,7 @@
     [header]="t('patient.editPatient')"
     [visible]="editPatientVisible()"
     (onHide)="editPatientVisible.set(false)"
-    position="right"
+    [position]="drawerPosition()"
   >
     <p>
       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut

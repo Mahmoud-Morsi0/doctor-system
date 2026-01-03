@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslocoModule, TranslocoPipe, TranslocoService } from '@jsverse/transloco';
@@ -15,6 +15,7 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
+import { LanguageService } from '../../../../core/services';
 
 /**
  * Patient Interface
@@ -63,10 +64,15 @@ export interface Patient {
   providers: [ConfirmationService, MessageService]
 })
 export class Home {
-
   confirmationService = inject(ConfirmationService);
   messageService = inject(MessageService);
   t = inject(TranslocoService);
+  languageService = inject(LanguageService);
+
+  // Drawer position based on language direction
+  // Right for LTR (English), Left for RTL (Arabic)
+  drawerPosition = computed(() => (this.languageService.isRTL() ? 'left' : 'right'));
+
   // Drawer visibility
   visible = signal(false);
 
