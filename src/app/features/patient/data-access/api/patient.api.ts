@@ -19,16 +19,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CreateUserRequest, CreateUserResponse } from '../models/patient.interface';
+import { Patient } from '../models/patient.interface';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CreateUserApi {
+export class PatientApi {
   constructor(private http: HttpClient) { }
 
-  createUser(request: CreateUserRequest): Observable<CreateUserResponse> {
-    return this.http.post<CreateUserResponse>('/api/users', request);
+  getPatients(request: Patient): Observable<Patient> {
+    return this.http.post<Patient>('/api/users', request);
   }
 }
 

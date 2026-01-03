@@ -1,3 +1,3 @@
 // API Layer barrel export
-export * from './create-user.api';
+export * from './patient.api';
 
