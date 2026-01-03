@@ -138,14 +138,14 @@
               </div>
               <div class="text-center">
                 <p class="text-lg font-semibold text-slate-700 mb-1">
-                  {{ t('reservation.noReservationsFound') }}
+                  {{ t('reservation.noVisitsFound') }}
                 </p>
                 <p class="text-sm text-slate-500">
                   {{ t('reservation.emptyStateDescription') }}
                 </p>
               </div>
               <p-button
-                [label]="t('reservation.newReservation')"
+                [label]="t('reservation.newVisit')"
                 severity="primary"
                 (click)="visible.set(true)"
               />
@@ -165,7 +165,7 @@
   </div>
 
   <p-drawer
-    [header]="t('reservation.newReservation')"
+    [header]="t('reservation.newVisit')"
     [visible]="visible()"
     (onHide)="visible.set(false)"
     [position]="drawerPosition()"
@@ -178,7 +178,7 @@
     </p>
   </p-drawer>
   <p-drawer
-    [header]="t('reservation.editReservation')"
+    [header]="t('reservation.editVisit')"
     [visible]="editReservationVisible()"
     (onHide)="editReservationVisible.set(false)"
     [position]="drawerPosition()"
