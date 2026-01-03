@@ -1,5 +1,6 @@
 import { Component, computed, inject, signal, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { ButtonModule } from 'primeng/button';
 import { DrawerModule } from 'primeng/drawer';
@@ -23,7 +24,7 @@ import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'app-calendar-page',
   standalone: true,
-  imports: [CommonModule, TranslocoModule, ButtonModule, DrawerModule, TagModule],
+  imports: [CommonModule, FormsModule, TranslocoModule, ButtonModule, DrawerModule, TagModule],
   templateUrl: './calendar.page.html',
   styleUrl: './calendar.page.css',
 })
@@ -51,6 +52,9 @@ export class CalendarPage implements OnInit, OnDestroy {
 
   // Selected day for viewing appointments
   protected readonly selectedDay = signal<Date | null>(null);
+
+  // Date picker visibility
+  protected readonly datePickerVisible = signal(false);
 
   // All appointments
   protected readonly appointments = signal<Appointment[]>(appointments);
@@ -83,12 +87,23 @@ export class CalendarPage implements OnInit, OnDestroy {
   });
 
   private readonly destroy$ = new Subject<void>();
+  private readonly clickOutsideHandler = (event: MouseEvent) => {
+    const target = event.target as HTMLElement;
+    const datePickerContainer = document.querySelector('[data-date-picker-container]');
+    if (datePickerContainer && !datePickerContainer.contains(target)) {
+      this.datePickerVisible.set(false);
+    }
+  };
 
   /**
    * Initialize calendar
    */
   ngOnInit(): void {
     this.generateCalendarDays();
+    // Close date picker when clicking outside
+    setTimeout(() => {
+      document.addEventListener('click', this.clickOutsideHandler);
+    }, 0);
   }
 
   /**
@@ -97,6 +112,7 @@ export class CalendarPage implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    document.removeEventListener('click', this.clickOutsideHandler);
   }
 
   /**
@@ -432,6 +448,30 @@ export class CalendarPage implements OnInit, OnDestroy {
    */
   openCreateDrawer(): void {
     this.visible.set(true);
+  }
+
+  /**
+   * Get date value for date input (YYYY-MM-DD format)
+   */
+  getDateInputValue(): string {
+    const date = this.currentDate();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  /**
+   * Handle date input change
+   */
+  onDateInputChange(dateString: string): void {
+    if (dateString) {
+      const selectedDate = new Date(dateString);
+      selectedDate.setHours(0, 0, 0, 0);
+      this.currentDate.set(selectedDate);
+      this.generateCalendarDays();
+      this.datePickerVisible.set(false); // Close picker after selection
+    }
   }
 }
 

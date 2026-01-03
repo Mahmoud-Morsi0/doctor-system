@@ -7,6 +7,7 @@
   "dayAppointments": "مواعيد اليوم",
   "noAppointments": "لا توجد مواعيد لهذا اليوم",
   "changeStatus": "تغيير الحالة",
+  "selectDate": "اختر التاريخ",
   "status": {
     "complete": "مكتمل",
     "upcoming": "قادم",
