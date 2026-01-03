@@ -74,11 +74,12 @@ export class CalendarPage implements OnInit, OnDestroy {
     return this.getAppointmentsForDate(day);
   });
 
-  // Get formatted date string for selected day
+  // Get formatted date string for selected day (localized)
   protected readonly selectedDayFormatted = computed(() => {
     const day = this.selectedDay();
     if (!day) return '';
-    return day.toLocaleDateString('en-US', {
+    const locale = this.languageService.currentLanguage() === 'ar' ? 'ar-SA' : 'en-US';
+    return day.toLocaleDateString(locale, {
       weekday: 'long',
       day: 'numeric',
       month: 'long',
@@ -104,6 +105,11 @@ export class CalendarPage implements OnInit, OnDestroy {
     setTimeout(() => {
       document.addEventListener('click', this.clickOutsideHandler);
     }, 0);
+
+    // Regenerate calendar when language changes
+    this.languageService.language$.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.generateCalendarDays();
+    });
   }
 
   /**
@@ -388,11 +394,12 @@ export class CalendarPage implements OnInit, OnDestroy {
   }
 
   /**
-   * Get formatted date string for display
+   * Get formatted date string for display (localized)
    */
   getFormattedDate(): string {
     const date = this.currentDate();
-    return date.toLocaleDateString('en-US', {
+    const locale = this.languageService.currentLanguage() === 'ar' ? 'ar-SA' : 'en-US';
+    return date.toLocaleDateString(locale, {
       weekday: 'short',
       day: 'numeric',
       month: 'long',
@@ -437,10 +444,22 @@ export class CalendarPage implements OnInit, OnDestroy {
   }
 
   /**
-   * Get day names for calendar header
+   * Get day names for calendar header (localized)
    */
   getDayNames(): string[] {
-    return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const locale = this.languageService.currentLanguage() === 'ar' ? 'ar-SA' : 'en-US';
+    const date = new Date(2024, 0, 1); // Use a known Monday (Jan 1, 2024 is a Monday)
+    const dayNames: string[] = [];
+
+    // Generate day names starting from Monday
+    for (let i = 0; i < 7; i++) {
+      const dayDate = new Date(date);
+      dayDate.setDate(date.getDate() + i);
+      const dayName = dayDate.toLocaleDateString(locale, { weekday: 'short' });
+      dayNames.push(dayName);
+    }
+
+    return dayNames;
   }
 
   /**
