@@ -25,5 +25,9 @@
   "deletePatient": "Delete Patient",
   "noPatientsFound": "No patients found",
   "emptyStateDescription": "Try adjusting your search or add a new patient",
-  "clearSearch": "Clear Search"
+  "clearSearch": "Clear Search",
+  "profile": "Patient Profile",
+  "personalInfo": "Personal Information",
+  "medicalInfo": "Medical Information",
+  "notFound": "Patient not found"
 }

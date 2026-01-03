@@ -12,7 +12,7 @@ export const patients: Patient[] = [
     status: 'Active',
   },
   {
-    id: 'BN000',
+    id: 'BN001',
     name: 'Mohamed Hesham',
     dateOfBirth: '00/00/00',
     gender: 'Female',
@@ -22,7 +22,7 @@ export const patients: Patient[] = [
     status: 'Active',
   },
   {
-    id: 'BN000',
+    id: 'BN002',
     name: 'Mohamed Ehab',
     dateOfBirth: '00/00/00',
     gender: 'Female',
@@ -32,7 +32,7 @@ export const patients: Patient[] = [
     status: 'Active',
   },
   {
-    id: 'BN000',
+    id: 'BN003',
     name: 'Mohamed Ali',
     dateOfBirth: '00/00/00',
     gender: 'Male',
@@ -42,7 +42,7 @@ export const patients: Patient[] = [
     status: 'Inactive',
   },
   {
-    id: 'BN000',
+    id: 'BN004',
     name: 'Mohamed Ahmed',
     dateOfBirth: '00/00/00',
     gender: 'Male',
@@ -52,7 +52,7 @@ export const patients: Patient[] = [
     status: 'Active',
   },
   {
-    id: 'BN000',
+    id: 'BN005',
     name: 'Mohamed Mostafa',
     dateOfBirth: '00/00/00',
     gender: 'Female',
@@ -62,7 +62,7 @@ export const patients: Patient[] = [
     status: 'Active',
   },
   {
-    id: 'BN000',
+    id: 'BN006',
     name: 'Mohamed Adel',
     dateOfBirth: '00/00/00',
     gender: 'Male',
@@ -72,7 +72,7 @@ export const patients: Patient[] = [
     status: 'Inactive',
   },
   {
-    id: 'BN000',
+    id: 'BN007',
     name: 'Mohamed Amr',
     dateOfBirth: '00/00/00',
     gender: 'Female',
@@ -82,7 +82,7 @@ export const patients: Patient[] = [
     status: 'Active',
   },
   {
-    id: 'BN000',
+    id: 'BN008',
     name: 'Mohamed Ahmed',
     dateOfBirth: '00/00/00',
     gender: 'Male',
@@ -92,7 +92,7 @@ export const patients: Patient[] = [
     status: 'Active',
   },
   {
-    id: 'BN000',
+    id: 'BN009',
     name: 'Mohamed Mohamed',
     dateOfBirth: '00/00/00',
     gender: 'Male',
@@ -102,7 +102,7 @@ export const patients: Patient[] = [
     status: 'Active',
   },
   {
-    id: 'BN000',
+    id: 'BN010',
     name: 'Mohamed Mohamed',
     dateOfBirth: '00/00/00',
     gender: 'Male',
@@ -112,7 +112,7 @@ export const patients: Patient[] = [
     status: 'Active',
   },
   {
-    id: 'BN000',
+    id: 'BN011',
     name: 'Mohamed Mohamed',
     dateOfBirth: '00/00/00',
     gender: 'Male',
@@ -122,7 +122,7 @@ export const patients: Patient[] = [
     status: 'Active',
   },
   {
-    id: 'BN000',
+    id: 'BN012',
     name: 'Mohamed Mohamed',
     dateOfBirth: '00/00/00',
     gender: 'Male',
@@ -132,7 +132,7 @@ export const patients: Patient[] = [
     status: 'Active',
   },
   {
-    id: 'BN000',
+    id: 'BN013',
     name: 'Mohamed Mohamed',
     dateOfBirth: '00/00/00',
     gender: 'Male',
@@ -142,7 +142,7 @@ export const patients: Patient[] = [
     status: 'Active',
   },
   {
-    id: 'BN000',
+    id: 'BN014',
     name: 'Mohamed Mohamed',
     dateOfBirth: '00/00/00',
     gender: 'Male',

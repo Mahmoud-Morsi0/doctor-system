@@ -4,7 +4,7 @@ import {
   provideAppInitializer,
   inject,
 } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import {
   provideTransloco,
@@ -113,7 +113,7 @@ export function translocoInitializer() {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes),
+    provideRouter(routes, withComponentInputBinding()),
     provideHttpClient(withInterceptorsFromDi()),
 
     // Transloco Configuration

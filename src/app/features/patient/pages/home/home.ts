@@ -19,6 +19,7 @@ import { LanguageService } from '../../../../core/services';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { patients } from '../../data-access/data/patient';
 import { Patient, PaginationEvent } from '../../data-access/models/patient.interface';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -48,7 +49,7 @@ export class Home implements OnInit, OnDestroy {
   messageService = inject(MessageService);
   t = inject(TranslocoService);
   languageService = inject(LanguageService);
-
+  router = inject(Router);
   // Drawer position based on language direction
   // Right for LTR (English), Left for RTL (Arabic)
   drawerPosition = computed(() => (this.languageService.isRTL() ? 'left' : 'right'));
@@ -213,5 +214,9 @@ export class Home implements OnInit, OnDestroy {
         this.messageService.add({ severity: 'error', summary: this.t.translate('common.rejected'), detail: this.t.translate('common.youHaveRejected') });
       },
     });
+  }
+
+  onPatientClick(patientId: string): void {
+    this.router.navigate(['/patients', patientId]);
   }
 }

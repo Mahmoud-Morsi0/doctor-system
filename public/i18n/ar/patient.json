@@ -24,5 +24,9 @@
   "deletePatient": "حذف المريض",
   "noPatientsFound": "لم يتم العثور على مرضى",
   "emptyStateDescription": "حاول تعديل البحث أو إضافة مريض جديد",
-  "clearSearch": "مسح البحث"
+  "clearSearch": "مسح البحث",
+  "profile": "ملف المريض",
+  "personalInfo": "المعلومات الشخصية",
+  "medicalInfo": "المعلومات الطبية",
+  "notFound": "المريض غير موجود"
 }
