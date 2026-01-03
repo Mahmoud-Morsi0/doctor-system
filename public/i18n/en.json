@@ -47,14 +47,7 @@
   "employees": {
     "management": "Employees Management",
     "empty": "No employees found"
-  },
-  "patients": {
-    "management": "Patients Management",
-    "empty": "No patients found"
-  },
-  "patient": {
-    "title": "Patient",
-    "welcome": "Welcome to Patient",
-    "description": "Patient is the person who comes to the hospital to get medical care"
   }
+
+
 }

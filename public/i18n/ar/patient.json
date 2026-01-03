@@ -1,5 +1,24 @@
 {
-  "title": "المريض",
-  "welcome": "مرحبا بك في المريض",
-  "description": "المريض هو الشخص الذي يحضر المستشفى للحصول على الرعاية الطبية"
+  "title": "المرضى",
+  "searchPlaceholder": "البحث بالاسم أو الرقم",
+  "newPatient": "مريض جديد",
+  "id": "الرقم",
+      "name": "الاسم",
+      "dateOfBirth": "تاريخ الميلاد",
+      "gender": "الجنس",
+      "assignedDentist": "طبيب الأسنان المعين",
+      "phoneNumber": "رقم الهاتف",
+      "nextAppt": "الموعد القادم",
+      "status": "الحالة",
+      "actions": "الإجراءات",
+      "edit": "تعديل",
+      "delete": "حذف",
+      "deleteConfirmation": "هل أنت متأكد من حذف هذا السجل؟",
+      "deleteConfirmationHeader": "منطقة الخطر",
+      "confirmed": "تم التأكيد",
+      "recordDeleted": "تم حذف السجل",
+      "rejected": "تم الرفض",
+      "youHaveRejected": "لقد رفضت",
+      "cancel": "إلغاء"
+
 }
