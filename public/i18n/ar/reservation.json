@@ -1,5 +1,5 @@
 {
-  "title": "الحجوزات",
+    "title": "الحجوزات",
   "patient": "المريض",
   "phone": "الهاتف",
   "appointment": "الموعد",
@@ -9,11 +9,11 @@
   "startTime": "الوقت البدء",
   "durationMinutes": "المدة المقدرة",
   "searchPlaceholder": "البحث باسم المريض أو الهاتف",
-  "newReservation": "حجز جديد",
-  "editReservation": "تعديل الحجز",
+  "editVisit": "تعديل الزيارة",
   "for": "ل",
   "mins": "دقيقة",
   "method": "الطريقة",
-  "noReservationsFound": "لم يتم العثور على حجوزات",
-  "emptyStateDescription": "حاول تعديل البحث أو إضافة حجز جديد"
+  "noVisitsFound": "لم يتم العثور على زيارات",
+  "emptyStateDescription": "حاول تعديل البحث أو إضافة زيارة جديدة",
+  "newVisit": "زيارة جديدة"
 }

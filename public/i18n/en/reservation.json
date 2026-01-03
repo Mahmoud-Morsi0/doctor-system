@@ -1,5 +1,5 @@
 {
-  "title": "Reservations",
+  "title": "Visits",
   "patient": "Patient",
   "phone": "Phone",
   "appointment": "Appointment",
@@ -9,11 +9,11 @@
   "startTime": "Start Time",
   "durationMinutes": "Duration Minutes",
   "searchPlaceholder": "Search by patient name or phone",
-  "newReservation": "New Reservation",
-  "editReservation": "Edit Reservation",
+  "editVisit": "Edit Visit",
   "for": "For",
   "mins": "Mins",
   "method": "Method",
-  "noReservationsFound": "No reservations found",
-  "emptyStateDescription": "Try adjusting your search or add a new reservation"
+  "noVisitsFound": "No visits found",
+  "emptyStateDescription": "Try adjusting your search or add a new visit",
+  "newVisit": "New Visit"
 }
