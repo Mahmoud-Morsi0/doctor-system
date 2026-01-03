@@ -20,6 +20,8 @@
   "recordDeleted": "Record deleted",
   "rejected": "Rejected",
   "youHaveRejected": "You have rejected",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "editPatient": "Edit Patient",
+  "deletePatient": "Delete Patient"
 
 }

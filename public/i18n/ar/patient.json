@@ -19,6 +19,8 @@
       "recordDeleted": "تم حذف السجل",
       "rejected": "تم الرفض",
       "youHaveRejected": "لقد رفضت",
-      "cancel": "إلغاء"
+      "cancel": "إلغاء",
+      "editPatient": "تعديل المريض",
+      "deletePatient": "حذف المريض"
 
 }
