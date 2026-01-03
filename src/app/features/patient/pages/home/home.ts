@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, inject, signal, computed, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslocoModule, TranslocoPipe, TranslocoService } from '@jsverse/transloco';
@@ -16,6 +16,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
 import { LanguageService } from '../../../../core/services';
+import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
+import { patients } from '../../data-access/data/patient';
 
 /**
  * Patient Interface
@@ -63,7 +65,7 @@ export interface Patient {
   styleUrl: './home.css',
   providers: [ConfirmationService, MessageService]
 })
-export class Home {
+export class Home implements OnInit, OnDestroy {
   confirmationService = inject(ConfirmationService);
   messageService = inject(MessageService);
   t = inject(TranslocoService);
@@ -86,109 +88,14 @@ export class Home {
   deletePatientVisible = signal(false);
   searchValue = signal('');
 
+  // RxJS Subject for debounced search
+  private readonly searchSubject = new Subject<string>();
+  private readonly destroy$ = new Subject<void>();
+
   // Table data
-  patients = signal<Patient[]>([
-    {
-      id: 'BN000',
-      name: 'Trịnh Quang Vinh',
-      dateOfBirth: '00/00/00',
-      gender: 'Male',
-      assignedDentist: { name: 'Dr. Duyen' },
-      phoneNumber: '090 000 001',
-      nextAppointment: '00/00/00',
-      status: 'Active',
-    },
-    {
-      id: 'BN000',
-      name: 'Lâm Tuyết Ngân',
-      dateOfBirth: '00/00/00',
-      gender: 'Female',
-      assignedDentist: { name: 'Dr. Tuan' },
-      phoneNumber: '090 000 002',
-      nextAppointment: '00/00/00',
-      status: 'Active',
-    },
-    {
-      id: 'BN000',
-      name: 'Đào Phương Linh',
-      dateOfBirth: '00/00/00',
-      gender: 'Female',
-      assignedDentist: { name: 'Dr. Hung' },
-      phoneNumber: '090 000 003',
-      nextAppointment: '---',
-      status: 'Active',
-    },
-    {
-      id: 'BN000',
-      name: 'Lê Hoàng Anh',
-      dateOfBirth: '00/00/00',
-      gender: 'Male',
-      assignedDentist: { name: 'Dr. Duyen' },
-      phoneNumber: '090 000 004',
-      nextAppointment: '00/00/00',
-      status: 'Inactive',
-    },
-    {
-      id: 'BN000',
-      name: 'Hồ Văn Khánh',
-      dateOfBirth: '00/00/00',
-      gender: 'Male',
-      assignedDentist: { name: 'Dr. Tuan' },
-      phoneNumber: '090 000 005',
-      nextAppointment: '00/00/00',
-      status: 'Active',
-    },
-    {
-      id: 'BN000',
-      name: 'Chu Thanh Hiền',
-      dateOfBirth: '00/00/00',
-      gender: 'Female',
-      assignedDentist: { name: 'Dr. Hung' },
-      phoneNumber: '090 000 006',
-      nextAppointment: '00/00/00',
-      status: 'Active',
-    },
-    {
-      id: 'BN000',
-      name: 'Tống Nhật Minh',
-      dateOfBirth: '00/00/00',
-      gender: 'Male',
-      assignedDentist: { name: 'Dr. Duyen' },
-      phoneNumber: '090 000 007',
-      nextAppointment: '---',
-      status: 'Inactive',
-    },
-    {
-      id: 'BN000',
-      name: 'Đỗ Xuân Mai',
-      dateOfBirth: '00/00/00',
-      gender: 'Female',
-      assignedDentist: { name: 'Dr. Tuan' },
-      phoneNumber: '090 000 008',
-      nextAppointment: '00/00/00',
-      status: 'Active',
-    },
-    {
-      id: 'BN000',
-      name: 'Lý Bảo Nam',
-      dateOfBirth: '00/00/00',
-      gender: 'Male',
-      assignedDentist: { name: 'Dr. Hung' },
-      phoneNumber: '090 000 009',
-      nextAppointment: '00/00/00',
-      status: 'Active',
-    },
-    {
-      id: 'BN000',
-      name: 'Hoàng Hải Đăng',
-      dateOfBirth: '00/00/00',
-      gender: 'Male',
-      assignedDentist: { name: 'Dr. Duyen' },
-      phoneNumber: '090 000 010',
-      nextAppointment: '00/00/00',
-      status: 'Active',
-    },
-  ]);
+  patients = signal<Patient[]>(
+    patients
+  );
 
   // Pagination
   first = signal(0);
@@ -199,10 +106,44 @@ export class Home {
   filteredPatients = signal<Patient[]>(this.patients());
 
   /**
-   * Filter patients based on search input
+   * Initialize component and set up debounced search
    */
-  onSearch(): void {
-    const search = this.searchValue().toLowerCase().trim();
+  ngOnInit(): void {
+    // Set up debounced search subscription
+    // Debounce for 300ms - waits for user to stop typing before searching
+    this.searchSubject
+      .pipe(
+        debounceTime(300), // Wait 300ms after user stops typing
+        distinctUntilChanged(), // Only emit if value changed
+        takeUntil(this.destroy$) // Clean up on component destroy
+      )
+      .subscribe((searchTerm) => {
+        this.performSearch(searchTerm);
+      });
+  }
+
+  /**
+   * Clean up subscriptions on component destroy
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  /**
+   * Handle search input changes - triggers debounced search
+   */
+  onSearchInput(value: string): void {
+    this.searchValue.set(value);
+    this.searchSubject.next(value);
+  }
+
+  /**
+   * Perform the actual search filtering
+   * This is called after debounce delay
+   */
+  private performSearch(searchTerm: string): void {
+    const search = searchTerm.toLowerCase().trim();
     if (!search) {
       this.filteredPatients.set(this.patients());
       return;
@@ -215,6 +156,14 @@ export class Home {
         patient.phoneNumber.toLowerCase().includes(search)
     );
     this.filteredPatients.set(filtered);
+  }
+
+  /**
+   * Clear search and reset filtered patients
+   */
+  clearSearch(): void {
+    this.searchValue.set('');
+    this.searchSubject.next('');
   }
 
   /**
