@@ -3,29 +3,48 @@
     <h1 class="text-3xl font-bold mb-2 text-primary-500">
       {{ t('reservation.title') }}
     </h1>
-    <p-button class="">test</p-button>
+    <p-button class="">Reserve</p-button>
   </div>
   <div class="flex gap-4">
-    <div class="bg-surface-100 rounded border-surface-400 w-3/4 p-4">
-      <!-- <p-table [value]="products" >
+    <div class="rounded border-surface-400 w-full">
+      <p-table [value]="reservations">
         <ng-template #header>
           <tr>
-            <th scope="col">Code</th>
-            <th scope="col">Name</th>
-            <th scope="col">Category</th>
-            <th scope="col">Quantity</th>
+            <th scope="col">#</th>
+            <th scope="col">Patient</th>
+            <th scope="col">Appointment</th>
+            <th scope="col">Payment</th>
+            <th scope="col">Status</th>
           </tr>
         </ng-template>
-        <ng-template #body let-product>
+        <ng-template #body let-reservation>
           <tr>
-            <td>{{ product.code }}</td>
-            <td>{{ product.name }}</td>
-            <td>{{ product.category }}</td>
-            <td>{{ product.quantity }}</td>
+            <td>00</td>
+            <td>
+              <p>{{ reservation.patient.name }}</p>
+              <p>{{ reservation.patient.phone }}</p>
+            </td>
+            <td>
+              <p>{{ reservation.appointment.date }}</p>
+              <p>
+                @{{ reservation.appointment.startTime }} For
+                {{ reservation.appointment.durationMinutes }} Mins
+              </p>
+            </td>
+            <td>
+              <p>{{ reservation.payment.amount }} {{ reservation.payment.currency }}</p>
+              @if (reservation.payment.method === 'CASH') {
+              <p class="text-green-600">{{ reservation.payment.method }}</p>
+              } @else if (reservation.payment.method === 'CARD') {
+              <p class="text-blue-600">{{ reservation.payment.method }}</p>
+              } @else {
+              <p class="text-violet-600">{{ reservation.payment.method }} -</p>
+              }
+            </td>
+            <td>{{ reservation.status }}</td>
           </tr>
         </ng-template>
-      </p-table> -->
+      </p-table>
     </div>
-    <div class="bg-surface-300 rounded border-surface-400 w-1/4 p-4"></div>
   </div>
 </div>
