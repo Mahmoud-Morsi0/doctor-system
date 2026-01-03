@@ -19,7 +19,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CreateUserRequest, CreateUserResponse } from '../models/user.interface';
+import { CreateUserRequest, CreateUserResponse } from '../models/patient.interface';
 
 @Injectable({
   providedIn: 'root'

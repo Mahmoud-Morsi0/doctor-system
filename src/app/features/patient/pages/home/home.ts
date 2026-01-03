@@ -18,30 +18,8 @@ import { MessageService } from 'primeng/api';
 import { LanguageService } from '../../../../core/services';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { patients } from '../../data-access/data/patient';
+import { Patient, PaginationEvent } from '../../data-access/models/patient.interface';
 
-/**
- * Patient Interface
- */
-export interface Patient {
-  id: string;
-  name: string;
-  dateOfBirth: string;
-  gender: 'Male' | 'Female';
-  assignedDentist: {
-    name: string;
-    avatar?: string;
-  };
-  phoneNumber: string;
-  nextAppointment: string;
-  status: 'Active' | 'Inactive';
-}
-
-/**
- * Patient Home Component
- *
- * Displays a table of patients with search, filter, and pagination.
- * Uses scoped translations from /i18n/{lang}/patient.json
- */
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -91,6 +69,10 @@ export class Home implements OnInit, OnDestroy {
   // RxJS Subject for debounced search
   private readonly searchSubject = new Subject<string>();
   private readonly destroy$ = new Subject<void>();
+  private readonly paginationSubject = new Subject<PaginationEvent>();
+
+  // Public observable for pagination changes (can be subscribed to from outside)
+  readonly pagination$ = this.paginationSubject.asObservable();
 
   // Table data
   patients = signal<Patient[]>(
@@ -106,7 +88,7 @@ export class Home implements OnInit, OnDestroy {
   filteredPatients = signal<Patient[]>(this.patients());
 
   /**
-   * Initialize component and set up debounced search
+   * Initialize component and set up debounced search and pagination
    */
   ngOnInit(): void {
     // Set up debounced search subscription
@@ -119,6 +101,19 @@ export class Home implements OnInit, OnDestroy {
       )
       .subscribe((searchTerm) => {
         this.performSearch(searchTerm);
+      });
+
+    // Subscribe to pagination changes
+    // This allows other parts of the app to react to pagination changes
+    this.pagination$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((paginationEvent) => {
+        // Emit pagination changes
+        // You can add additional logic here, such as:
+        // - Fetching data from API
+        // - Updating URL query parameters
+        // - Logging analytics
+        console.log('Pagination changed:', paginationEvent);
       });
   }
 
@@ -167,11 +162,21 @@ export class Home implements OnInit, OnDestroy {
   }
 
   /**
-   * Handle pagination
+   * Handle pagination changes
+   * Emits pagination event when page number or rows per page changes
    */
   onPageChange(event: any): void {
+    const paginationEvent: PaginationEvent = {
+      rows: event.rows,
+      page: event.pageCount || Math.floor(event.first / event.rows), // Calculate page number
+    };
+
+    // Update signals
     this.first.set(event.first);
     this.rows.set(event.rows);
+
+    // Emit pagination change event
+    this.paginationSubject.next(paginationEvent);
   }
 
   /**

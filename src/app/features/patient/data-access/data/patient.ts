@@ -1,4 +1,4 @@
-import { Patient } from "../../pages/home/home";
+import { Patient } from "../models/patient.interface";
 
 export const patients: Patient[] = [
   {

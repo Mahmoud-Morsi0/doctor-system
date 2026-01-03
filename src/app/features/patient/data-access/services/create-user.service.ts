@@ -18,7 +18,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { CreateUserRequest, CreateUserResponse } from '../models/user.interface';
+import { CreateUserRequest, CreateUserResponse } from '../models/patient.interface';
 import { Observable, map } from 'rxjs';
 import { CreateUserApi } from '../api';
 
