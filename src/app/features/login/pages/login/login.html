@@ -19,8 +19,28 @@
         <h1 class="text-3xl font-bold text-gray-900">{{ t('login.title') }}</h1>
       </div>
 
+      <!-- Error Alert -->
+      @if (errorMessage()) {
+      <div
+        class="mb-6 rounded-lg bg-red-50 border border-red-200 p-4 flex items-start gap-3"
+        role="alert"
+      >
+        <i class="pi pi-exclamation-circle text-red-600 mt-0.5"></i>
+        <div class="flex-1">
+          <p class="text-sm text-red-800">{{ errorMessage() }}</p>
+        </div>
+        <button
+          type="button"
+          (click)="clearError()"
+          class="text-red-600 hover:text-red-800 transition-colors"
+          aria-label="Close"
+        >
+          <i class="pi pi-times"></i>
+        </button>
+      </div>
+      }
       <!-- Login Form -->
-      <form (ngSubmit)="handleSubmit($event)" action="submit" class="space-y-6">
+      <div (submit)="handleSubmit($event)" class="space-y-6" [attr.novalidate]="true">
         <!-- Email Input -->
         <div>
           <label for="email" class="mb-2 block text-sm font-medium text-gray-700">
@@ -31,8 +51,15 @@
             id="email"
             type="email"
             [placeholder]="t('login.emailPlaceholder')"
+            [class.border-red-500]="getFieldError('email')"
+            autocomplete="email"
             class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 placeholder-gray-400 transition-colors focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
           />
+          @if (getFieldError('email')) {
+          <p class="mt-1 text-sm text-red-600" role="alert">
+            {{ getFieldError('email') }}
+          </p>
+          }
         </div>
 
         <!-- Password Input -->
@@ -42,39 +69,50 @@
           </label>
           <p-password
             [id]="'password'"
-            [name]="'password'"
             [field]="loginForm.password"
             [toggleMask]="true"
             [feedback]="false"
             [placeholder]="t('login.passwordPlaceholder')"
+            [class.ng-invalid]="getFieldError('password')"
+            autocomplete="current-password"
             fluid
           />
+          @if (getFieldError('password')) {
+          <p class="mt-1 text-sm text-red-600" role="alert">
+            {{ getFieldError('password') }}
+          </p>
+          }
         </div>
 
         <!-- Forgot Password Link -->
         <div class="flex justify-end">
-          <a
-            href="#"
-            class="text-sm text-gray-600 underline transition-colors hover:text-primary-600"
+          <button
+            type="button"
+            class="text-sm text-red-600 transition-colors hover:text-red-500 bg-transparent border-0 p-0 cursor-pointer"
           >
             {{ t('login.forgotPassword') }}
-          </a>
+          </button>
         </div>
 
         <!-- Submit Button -->
-        <button
-          type="submit"
-          [disabled]="loginForm().invalid()"
-          class="w-full rounded-full bg-primary-600 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 cursor-pointer"
-        >
-          {{ t('login.submitButton') }}
-        </button>
-      </form>
+      </div>
+      <button
+        type="submit"
+        (click)="handleSubmit($event)"
+        [disabled]="!isFormValid() || isLoading()"
+        class="mt-4 w-full rounded-full bg-primary-600 px-6 py-3 text-sm font-medium text-white transition-all hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+      >
+        @if (isLoading()) {
+        <i class="pi pi-spinner pi-spin"></i>
+        } @else {
+        <span>{{ t('login.submitButton') }}</span>
+        }
+      </button>
     </div>
   </div>
 
   <!-- Right Section: Aesthetic Image -->
-  <div class="w-3/6 flex items-center justify-center p-6">
+  <div class="hidden md:flex w-3/6 items-center justify-center p-6">
     <div class="h-full w-full rounded-lg flex flex-col items-center justify-center bg-gray-200">
       <!-- Placeholder Icon -->
       <div class="mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-gray-300">
