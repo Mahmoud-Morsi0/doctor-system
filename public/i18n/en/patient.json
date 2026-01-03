@@ -29,5 +29,46 @@
   "profile": "Patient Profile",
   "personalInfo": "Personal Information",
   "medicalInfo": "Medical Information",
-  "notFound": "Patient not found"
+  "notFound": "Patient not found",
+  "tabs": {
+    "information": "Information",
+    "checkupHistory": "Check-up History",
+    "digitalNotes": "Digital Notes",
+    "billingHistory": "Billing History"
+  },
+  "sections": {
+    "personalInfo": "Personal Information",
+    "medicalDentalHistory": "Medical & Dental History",
+    "insuranceInfo": "Insurance Information"
+  },
+  "fields": {
+    "fullName": "Full Name",
+    "gender": "Gender",
+    "phoneNumber": "Phone Number",
+    "assignedDentist": "Assigned Dentist",
+    "dateOfBirth": "Date of Birth",
+    "address": "Address",
+    "email": "Email",
+    "referredBy": "Referred By",
+    "reasonForVisit": "Reason for Visit",
+    "medicalConditions": "Medical Conditions",
+    "allergies": "Allergies",
+    "currentMedications": "Current Medications",
+    "dentalHistory": "Dental History",
+    "insuranceProvider": "Insurance Provider",
+    "policyNumber": "Policy Number"
+  },
+  "notProvided": "Not provided",
+  "notAssigned": "Not assigned",
+  "none": "None",
+  "noKnownConditions": "No known conditions",
+  "checkupHistory": {
+    "empty": "No check-up history available"
+  },
+  "digitalNotes": {
+    "empty": "No digital notes available"
+  },
+  "billingHistory": {
+    "empty": "No billing history available"
+  }
 }

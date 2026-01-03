@@ -28,5 +28,46 @@
   "profile": "ملف المريض",
   "personalInfo": "المعلومات الشخصية",
   "medicalInfo": "المعلومات الطبية",
-  "notFound": "المريض غير موجود"
+  "notFound": "المريض غير موجود",
+  "tabs": {
+    "information": "المعلومات",
+    "checkupHistory": "سجل الفحص",
+    "digitalNotes": "الملاحظات الرقمية",
+    "billingHistory": "سجل الفواتير"
+  },
+  "sections": {
+    "personalInfo": "المعلومات الشخصية",
+    "medicalDentalHistory": "التاريخ الطبي والسنّي",
+    "insuranceInfo": "معلومات التأمين"
+  },
+  "fields": {
+    "fullName": "الاسم الكامل",
+    "gender": "الجنس",
+    "phoneNumber": "رقم الهاتف",
+    "assignedDentist": "طبيب الأسنان المعين",
+    "dateOfBirth": "تاريخ الميلاد",
+    "address": "العنوان",
+    "email": "البريد الإلكتروني",
+    "referredBy": "أحال بواسطة",
+    "reasonForVisit": "سبب الزيارة",
+    "medicalConditions": "الحالات الطبية",
+    "allergies": "الحساسية",
+    "currentMedications": "الأدوية الحالية",
+    "dentalHistory": "التاريخ السني",
+    "insuranceProvider": "مزود التأمين",
+    "policyNumber": "رقم البوليصة"
+  },
+  "notProvided": "غير متوفر",
+  "none": "لا شيء",
+  "noKnownConditions": "لا توجد حالات معروفة",
+  "notAssigned": "لم يتم تعيين",
+  "checkupHistory": {
+    "empty": "لا يوجد سجل فحص متاح"
+  },
+  "digitalNotes": {
+    "empty": "لا توجد ملاحظات رقمية متاحة"
+  },
+  "billingHistory": {
+    "empty": "لا يوجد سجل فواتير متاح"
+  }
 }

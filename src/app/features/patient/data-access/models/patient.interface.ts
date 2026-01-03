@@ -13,8 +13,21 @@ export interface Patient {
   assignedDentist: {
     name: string;
     avatar?: string;
-  };
+  } | null;
   phoneNumber: string;
   nextAppointment: string;
   status: 'Active' | 'Inactive';
+  // Additional fields for profile
+  address?: string;
+  email?: string;
+  referredBy?: string;
+  // Medical & Dental History
+  reasonForVisit?: string;
+  medicalConditions?: string;
+  allergies?: string;
+  currentMedications?: string;
+  dentalHistory?: string;
+  // Insurance Information
+  insuranceProvider?: string;
+  policyNumber?: string;
 }

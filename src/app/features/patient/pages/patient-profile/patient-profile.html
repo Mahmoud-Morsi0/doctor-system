@@ -1,0 +1,271 @@
+<div
+  class="p-8 bg-gray-50 min-h-screen"
+  *transloco="let t; scope: 'patient'"
+  [attr.dir]="languageService.isRTL() ? 'rtl' : 'ltr'"
+>
+  @if (patient(); as patientData) {
+  <!-- Header -->
+  <div
+    class="mb-6 flex items-center justify-between"
+    [class.flex-row-reverse]="languageService.isRTL()"
+  >
+    <h1 class="text-2xl font-bold text-gray-900 uppercase">
+      {{ patientData.name }}
+    </h1>
+
+    <!-- Tabs Navigation -->
+    <div class="flex items-center gap-2" [class.flex-row-reverse]="languageService.isRTL()">
+      <nav
+        class="flex items-center gap-1 border-b border-gray-300"
+        [class.flex-row-reverse]="languageService.isRTL()"
+      >
+        <button
+          type="button"
+          (click)="setActiveTab('information')"
+          [class.border-b-2]="activeTab() === 'information'"
+          [class.border-primary-600]="activeTab() === 'information'"
+          [class.text-primary-600]="activeTab() === 'information'"
+          [class.text-gray-600]="activeTab() !== 'information'"
+          class="px-4 py-2 text-sm font-medium transition-colors hover:text-primary-600"
+        >
+          {{ t('patient.tabs.information') }}
+        </button>
+        <button
+          type="button"
+          (click)="setActiveTab('checkup')"
+          [class.border-b-2]="activeTab() === 'checkup'"
+          [class.border-primary-600]="activeTab() === 'checkup'"
+          [class.text-primary-600]="activeTab() === 'checkup'"
+          [class.text-gray-600]="activeTab() !== 'checkup'"
+          class="px-4 py-2 text-sm font-medium transition-colors hover:text-primary-600"
+        >
+          {{ t('patient.tabs.checkupHistory') }}
+        </button>
+        <button
+          type="button"
+          (click)="setActiveTab('notes')"
+          [class.border-b-2]="activeTab() === 'notes'"
+          [class.border-primary-600]="activeTab() === 'notes'"
+          [class.text-primary-600]="activeTab() === 'notes'"
+          [class.text-gray-600]="activeTab() !== 'notes'"
+          class="px-4 py-2 text-sm font-medium transition-colors hover:text-primary-600"
+        >
+          {{ t('patient.tabs.digitalNotes') }}
+        </button>
+        <button
+          type="button"
+          (click)="setActiveTab('billing')"
+          [class.border-b-2]="activeTab() === 'billing'"
+          [class.border-primary-600]="activeTab() === 'billing'"
+          [class.text-primary-600]="activeTab() === 'billing'"
+          [class.text-gray-600]="activeTab() !== 'billing'"
+          class="px-4 py-2 text-sm font-medium transition-colors hover:text-primary-600"
+        >
+          {{ t('patient.tabs.billingHistory') }}
+        </button>
+      </nav>
+      <button
+        type="button"
+        (click)="toggleEditMode()"
+        [class.ml-4]="!languageService.isRTL()"
+        [class.mr-4]="languageService.isRTL()"
+        class="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-700 transition-colors hover:bg-gray-50"
+        [attr.aria-label]="t('patient.edit')"
+      >
+        <i class="pi pi-pencil text-sm"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Content based on active tab -->
+  @if (activeTab() === 'information') {
+  <!-- Information Tab Content -->
+  <div class="space-y-6">
+    <!-- Personal Information Section -->
+    <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+      <div
+        class="border-l-4 border-primary-600 bg-primary-50 px-6 py-4 rtl:border-l-0 rtl:border-r-4"
+      >
+        <h2 class="text-lg font-bold text-primary-700">{{ t('patient.sections.personalInfo') }}</h2>
+      </div>
+      <div class="p-6">
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div>
+            <label class="block text-sm font-medium text-gray-600">{{
+              t('patient.fields.fullName')
+            }}</label>
+            <p class="mt-1 text-base font-semibold text-gray-900">{{ patientData.name }}</p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-600">{{
+              t('patient.fields.gender')
+            }}</label>
+            <p class="mt-1 text-base font-semibold text-gray-900">{{ patientData.gender }}</p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-600">{{
+              t('patient.fields.phoneNumber')
+            }}</label>
+            <p class="mt-1 text-base font-semibold text-gray-900">{{ patientData.phoneNumber }}</p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-600">{{
+              t('patient.fields.assignedDentist')
+            }}</label>
+            <p class="mt-1 text-base font-semibold text-gray-900">
+              {{ patientData.assignedDentist?.name ?? t('patient.notAssigned') }}
+            </p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-600">{{
+              t('patient.fields.dateOfBirth')
+            }}</label>
+            <p class="mt-1 text-base font-semibold text-gray-900">{{ patientData.dateOfBirth }}</p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-600">{{
+              t('patient.fields.address')
+            }}</label>
+            <p class="mt-1 text-base font-semibold text-gray-900">
+              {{ patientData.address || t('patient.notProvided') }}
+            </p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-600">{{
+              t('patient.fields.email')
+            }}</label>
+            <p class="mt-1 text-base font-semibold text-gray-900">
+              {{ patientData.email || t('patient.notProvided') }}
+            </p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-600">{{
+              t('patient.fields.referredBy')
+            }}</label>
+            <p class="mt-1 text-base font-semibold text-gray-900">
+              {{ patientData.referredBy || t('patient.none') }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Medical & Dental History Section -->
+    <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+      <div
+        class="border-l-4 border-primary-600 bg-primary-50 px-6 py-4 rtl:border-l-0 rtl:border-r-4"
+      >
+        <h2 class="text-lg font-bold text-primary-700">
+          {{ t('patient.sections.medicalDentalHistory') }}
+        </h2>
+      </div>
+      <div class="p-6">
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-600">{{
+              t('patient.fields.reasonForVisit')
+            }}</label>
+            <p class="mt-1 text-base font-semibold text-gray-900">
+              {{ patientData.reasonForVisit || t('patient.notProvided') }}
+            </p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-600">{{
+              t('patient.fields.medicalConditions')
+            }}</label>
+            <p class="mt-1 text-base font-semibold text-gray-900">
+              {{ patientData.medicalConditions || t('patient.noKnownConditions') }}
+            </p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-600">{{
+              t('patient.fields.allergies')
+            }}</label>
+            <p class="mt-1 text-base font-semibold text-gray-900">
+              {{ patientData.allergies || t('patient.none') }}
+            </p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-600">{{
+              t('patient.fields.currentMedications')
+            }}</label>
+            <p class="mt-1 text-base font-semibold text-gray-900">
+              {{ patientData.currentMedications || t('patient.none') }}
+            </p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-600">{{
+              t('patient.fields.dentalHistory')
+            }}</label>
+            <p class="mt-1 text-base font-semibold text-gray-900">
+              {{ patientData.dentalHistory || t('patient.notProvided') }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Insurance Information Section -->
+    <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+      <div
+        class="border-l-4 border-primary-600 bg-primary-50 px-6 py-4 rtl:border-l-0 rtl:border-r-4"
+      >
+        <h2 class="text-lg font-bold text-primary-700">
+          {{ t('patient.sections.insuranceInfo') }}
+        </h2>
+      </div>
+      <div class="p-6">
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div>
+            <label class="block text-sm font-medium text-gray-600">{{
+              t('patient.fields.insuranceProvider')
+            }}</label>
+            <p class="mt-1 text-base font-semibold text-gray-900">
+              {{ patientData.insuranceProvider || t('patient.notProvided') }}
+            </p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-600">{{
+              t('patient.fields.policyNumber')
+            }}</label>
+            <p class="mt-1 text-base font-semibold text-gray-900">
+              {{ patientData.policyNumber || t('patient.notProvided') }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  } @else if (activeTab() === 'checkup') {
+  <!-- Check-up History Tab -->
+  <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
+    <p class="text-gray-600">{{ t('patient.checkupHistory.empty') }}</p>
+  </div>
+  } @else if (activeTab() === 'notes') {
+  <!-- Digital Notes Tab -->
+  <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
+    <p class="text-gray-600">{{ t('patient.digitalNotes.empty') }}</p>
+  </div>
+  } @else if (activeTab() === 'billing') {
+  <!-- Billing History Tab -->
+  <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
+    <p class="text-gray-600">{{ t('patient.billingHistory.empty') }}</p>
+  </div>
+  } } @else {
+  <!-- Patient Not Found -->
+  <div class="flex flex-col items-center justify-center py-12 text-center">
+    <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
+      <i class="pi pi-user-times text-3xl text-gray-400"></i>
+    </div>
+    <p class="text-lg font-semibold text-gray-700">{{ t('patient.notFound') }}</p>
+    <p-button
+      [label]="t('common.back')"
+      [icon]="'pi pi-arrow-left'"
+      severity="secondary"
+      [outlined]="true"
+      (onClick)="goBack()"
+      class="mt-4"
+    />
+  </div>
+  }
+</div>
