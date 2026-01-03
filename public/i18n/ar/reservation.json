@@ -10,5 +10,7 @@
   "durationMinutes": "المدة المقدرة",
   "searchPlaceholder": "البحث باسم المريض أو الهاتف",
   "newReservation": "حجز جديد",
-  "editReservation": "تعديل الحجز"
+  "editReservation": "تعديل الحجز",
+  "for": "ل",
+  "mins": "دقيقة"
 }

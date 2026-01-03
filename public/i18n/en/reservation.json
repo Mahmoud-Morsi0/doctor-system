@@ -10,5 +10,7 @@
   "durationMinutes": "Duration Minutes",
   "searchPlaceholder": "Search by patient name or phone",
   "newReservation": "New Reservation",
-  "editReservation": "Edit Reservation"
+  "editReservation": "Edit Reservation",
+  "for": "For",
+  "mins": "Mins"
 }

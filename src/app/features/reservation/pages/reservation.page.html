@@ -66,8 +66,8 @@
             </td>
             <td>
               <p class="font-medium text-slate-900">
-                @{{ reservation.appointment?.startTime }} For
-                {{ reservation.appointment?.durationMinutes }} Mins
+                {{ reservation.appointment?.startTime }} {{ t('reservation.for') }}
+                {{ reservation.appointment?.durationMinutes }} {{ t('reservation.mins') }}
               </p>
             </td>
             <td class="flex items-center gap-2">
