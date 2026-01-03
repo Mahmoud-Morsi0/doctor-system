@@ -59,12 +59,12 @@ export class CalendarPage implements OnInit, OnDestroy {
   // All appointments
   protected readonly appointments = signal<Appointment[]>(appointments);
 
-  // Available status options
-  protected readonly statusOptions: { label: string; value: AppointmentStatus }[] = [
-    { label: 'Complete', value: 'COMPLETE' },
-    { label: 'Upcoming', value: 'UPCOMING' },
-    { label: 'Pending', value: 'PENDING' },
-    { label: 'Cancel', value: 'CANCEL' },
+  // Available status options (labels will be translated in template)
+  protected readonly statusOptions: { value: AppointmentStatus }[] = [
+    { value: 'COMPLETE' },
+    { value: 'UPCOMING' },
+    { value: 'PENDING' },
+    { value: 'CANCEL' },
   ];
 
   // Get all appointments for the selected day
@@ -314,11 +314,23 @@ export class CalendarPage implements OnInit, OnDestroy {
   }
 
   /**
-   * Get status label for display
+   * Get status label for display (localized)
    */
   getStatusLabel(status: AppointmentStatus): string {
-    const option = this.statusOptions.find((opt) => opt.value === status);
-    return option?.label || status;
+    // Map status to translation key (using scoped translations)
+    const statusKeyMap: Record<AppointmentStatus, string> = {
+      'COMPLETE': 'status.complete',
+      'UPCOMING': 'status.upcoming',
+      'PENDING': 'status.pending',
+      'CANCEL': 'status.cancel',
+    };
+
+    const translationKey = statusKeyMap[status];
+    if (translationKey) {
+      // Use scoped translation (scope: 'appointment')
+      return this.t.translate(translationKey, {}, 'appointment');
+    }
+    return status;
   }
 
   /**

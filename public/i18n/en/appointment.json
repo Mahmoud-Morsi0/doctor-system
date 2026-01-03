@@ -19,6 +19,7 @@
     "weekly": "Weekly",
     "monthly": "Monthly"
   },
-  "createFormPlaceholder": "Appointment creation form will be implemented here"
+  "createFormPlaceholder": "Appointment creation form will be implemented here",
+  "mins": "Mins"
 }
 
