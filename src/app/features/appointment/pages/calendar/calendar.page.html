@@ -256,7 +256,7 @@
     [visible]="visible()"
     (onHide)="visible.set(false)"
     [position]="drawerPosition()"
-    [style]="{ width: '30%', 'min-width': '300px' }"
+    [style]="{ width: '30%', 'min-width': '250px' }"
   >
     <p>
       {{ t('appointment.createFormPlaceholder') }}
@@ -269,7 +269,7 @@
     [visible]="dayAppointmentsVisible()"
     (onHide)="closeDayAppointments()"
     [position]="drawerPosition()"
-    [style]="{ width: '40%', 'min-width': '400px' }"
+    [style]="{ width: '25%', 'min-width': '250px' }"
   >
     <div class="space-y-4 py-4">
       @if (selectedDayAppointments().length === 0) {
