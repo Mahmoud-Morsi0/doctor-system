@@ -11,7 +11,7 @@ export const appointments: Appointment[] = [
     id: 'APT-000',
     patientName: 'unpaid',
     date: '2026-01-06',
-    startTime: '', // Empty startTime indicates all-day event
+    startTime: '',
     durationMinutes: 0,
     status: 'PENDING',
   },
@@ -28,7 +28,7 @@ export const appointments: Appointment[] = [
   {
     id: 'APT-WEEK-002',
     patientName: 'Jane Smith',
-    date: '2026-01-07', // Wednesday
+    date: '2026-01-07',
     startTime: '01:00',
     endTime: '02:00',
     durationMinutes: 60,
@@ -37,13 +37,12 @@ export const appointments: Appointment[] = [
   {
     id: 'APT-WEEK-003',
     patientName: 'Bob Johnson',
-    date: '2026-01-10', // Saturday
+    date: '2026-01-10',
     startTime: '01:00',
     endTime: '02:00',
     durationMinutes: 60,
     status: 'UPCOMING',
   },
-  // July 1, 2024
   {
     id: 'APT-001',
     patientName: 'Mahmoud Morsi',

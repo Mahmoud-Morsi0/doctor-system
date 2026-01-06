@@ -1,24 +1,45 @@
 /* Calendar specific styles */
-.calendar-time-slot {
+.calendar-day-grid {
+  display: grid;
+  grid-template-rows: repeat(
+    49,
+    30px
+  ); /* Fixed 30px height for all rows (1 All Day + 48 half-hour slots) */
   position: relative;
-  min-height: 60px;
+}
+
+.calendar-time-slot {
+  height: 30px; /* Fixed height for uniform cell sizes (30 minutes per slot) */
+  overflow: visible; /* Allow events to be visible */
+  padding: 1px 4px; /* Padding inside cells: 1px top/bottom, 4px left/right */
+  box-sizing: border-box;
+  position: relative;
 }
 
 .calendar-event {
-  position: absolute;
+  grid-column: 1 / -1; /* Default: span full width */
   z-index: 10;
-  border-radius: 4px;
-  padding: 4px 8px;
-  font-size: 12px;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 13px;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   box-sizing: border-box;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  margin: 1px 4px; /* Vertical spacing: 1px top/bottom, 4px left/right for cell padding */
+  width: calc(100% - 8px); /* Account for left/right margins */
+  /* Height is determined by grid-row-span, no fixed min-height to allow proper spanning */
 }
 
 .calendar-event:hover {
   z-index: 20;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Handle overlapping events at the same time */
+.calendar-day-grid:has(.calendar-event[style*='grid-column-start']) {
+  grid-template-columns: repeat(var(--overlap-count, 1), 1fr);
+  gap: 2px;
 }
 
 /* Week view day header highlight */

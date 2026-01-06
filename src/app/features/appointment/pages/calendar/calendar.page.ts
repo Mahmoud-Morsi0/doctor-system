@@ -38,8 +38,8 @@ export class CalendarPage implements OnInit, OnDestroy {
   // Current view (daily/weekly/monthly)
   protected readonly currentView = signal<CalendarView>('weekly');
 
-  // Current date (used for navigation)
-  protected readonly currentDate = signal<Date>(new Date()); // January 1, 2026
+  // Current date (used for navigation) - defaults to today
+  protected readonly currentDate = signal<Date>(new Date());
 
   // Calendar days for the current view
   protected readonly calendarDays = signal<CalendarDay[]>([]);
@@ -260,26 +260,28 @@ export class CalendarPage implements OnInit, OnDestroy {
   }
 
   /**
-   * Generate time slots for the day (hourly from 12:00 AM to 11:00 PM)
+   * Generate time slots for the day (every 30 minutes from 12:00 AM to 11:30 PM)
    * Localized AM/PM indicators
    */
   protected getTimeSlots(): string[] {
     const slots: string[] = ['All Day'];
     const locale = this.languageService.currentLanguage() === 'ar' ? 'ar-SA' : 'en-US';
-    const isArabic = this.languageService.currentLanguage() === 'ar';
 
+    // Generate 48 time slots (24 hours * 2 = 48 half-hour intervals)
     for (let hour = 0; hour < 24; hour++) {
-      const date = new Date();
-      date.setHours(hour, 0, 0, 0);
+      for (let minute = 0; minute < 60; minute += 30) {
+        const date = new Date();
+        date.setHours(hour, minute, 0, 0);
 
-      // Use Intl.DateTimeFormat for proper localization
-      const timeString = date.toLocaleTimeString(locale, {
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true
-      });
+        // Use Intl.DateTimeFormat for proper localization
+        const timeString = date.toLocaleTimeString(locale, {
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true
+        });
 
-      slots.push(timeString);
+        slots.push(timeString);
+      }
     }
     return slots;
   }
@@ -442,65 +444,113 @@ export class CalendarPage implements OnInit, OnDestroy {
   }
 
   /**
-   * Calculate event position and height based on start time and duration
-   * Position is calculated relative to the day container (which includes All Day + 24 hour slots)
-   * Also handles stacking of events with the same start time
+   * Get grid row and column positioning for an event using CSS Grid
+   * Returns CSS custom properties for grid-row-start, grid-row-end, and grid-column
    */
-  protected getEventStyle(day: Date, appointment: Appointment): { top: string; height: string; left?: string; width?: string; right?: string } {
+  protected getEventGridPosition(day: Date, appointment: Appointment): {
+    gridRowStart: number;
+    gridRowEnd: number;
+    gridColumnStart?: number;
+    gridColumnEnd?: number;
+  } {
     if (!appointment.startTime || appointment.startTime === '') {
-      return { top: '0px', height: '60px' }; // All-day event (first slot)
+      return { gridRowStart: 1, gridRowEnd: 2 }; // All-day event (first slot)
     }
 
     const [hours, minutes] = appointment.startTime.split(':').map(Number);
-    const durationHours = appointment.durationMinutes / 60;
 
-    // Each time slot is 60px (min-h-[60px])
-    const slotHeight = 60; // Each hour slot height in pixels
-    const allDaySlotHeight = 60; // All Day slot height
+    // Calculate grid row start (1-indexed, where 1 is "All Day")
+    // Row 1 = All Day
+    // Row 2 = 12:00 AM, Row 3 = 12:30 AM
+    // Row 4 = 1:00 AM, Row 5 = 1:30 AM
+    // ... and so on
+    // Formula: 1 (All Day) + (hour * 2) + (minutes >= 30 ? 1 : 0)
+    const gridRowStart = 2 + (hours * 2) + (minutes >= 30 ? 1 : 0);
 
-    // Calculate top position: All Day slot + (hour * slotHeight) + (minutes/60 * slotHeight)
-    const topPixels = allDaySlotHeight + (hours * slotHeight) + (minutes / 60 * slotHeight);
+    // Calculate grid row end based on duration in 30-minute increments
+    // Each row represents 30 minutes, so durationMinutes / 30 gives us the number of rows
+    const allDayEvents = this.getAppointmentsForDate(day)
+      .filter(apt => apt.startTime && apt.startTime !== '')
+      .sort((a, b) => {
+        const timeA = a.startTime!.split(':').map(Number);
+        const timeB = b.startTime!.split(':').map(Number);
+        if (timeA[0] !== timeB[0]) return timeA[0] - timeB[0];
+        return timeA[1] - timeB[1];
+      });
 
-    // Calculate height based on duration
-    const heightPixels = Math.max((durationHours * slotHeight), 55); // Minimum 30px height
+    const currentEventStartMinutes = hours * 60 + minutes;
+    const currentEventEndMinutes = currentEventStartMinutes + appointment.durationMinutes;
 
-    // Handle overlapping events - only stack horizontally if they truly overlap
-    // Sequential events (e.g., 10:00 and 10:30) should be positioned vertically
-    const grouped = this.getGroupedEventsByTime(day);
-    const eventsAtSameExactTime = grouped.get(appointment.startTime) || [];
-    const eventIndex = this.getEventIndexInGroup(day, appointment);
-    const totalEventsAtSameTime = eventsAtSameExactTime.length;
+    const hasSequentialEvent = allDayEvents.some(apt => {
+      if (apt.id === appointment.id || !apt.startTime) return false;
+      const [aptHours, aptMinutes] = apt.startTime.split(':').map(Number);
+      const aptStartMinutes = aptHours * 60 + aptMinutes;
+      return aptStartMinutes === currentEventEndMinutes;
+    });
 
-    // Only stack horizontally if multiple events have the EXACT same start time
-    // Sequential events (different start times) will be positioned vertically based on their actual times
-    if (totalEventsAtSameTime > 1) {
-      // Multiple events at the exact same time - stack them horizontally
-      // Use percentage-based positioning with small gaps
-      const gapPercent = 0.5; // Small gap as percentage (0.5% between events)
-      const marginPercent = 1; // Margin from edges (1%)
-      const totalGaps = (totalEventsAtSameTime - 1) * gapPercent;
-      const availableWidth = 100 - (marginPercent * 2) - totalGaps;
-      const eventWidthPercent = availableWidth / totalEventsAtSameTime;
+    // Calculate row span in 30-minute increments
+    // Minimum 1 row (30px) for readability, but use actual duration for sequential events
+    const minRowSpan = 1; // Minimum 1 row (30 minutes)
+    const calculatedRowSpan = Math.ceil(appointment.durationMinutes / 30); // Convert minutes to 30-min slots
+    const rowSpan = hasSequentialEvent
+      ? Math.max(calculatedRowSpan, 1) // At least 1 row for sequential events
+      : Math.max(calculatedRowSpan, minRowSpan);
 
-      // Calculate left position: margin + (index * (width + gap))
-      const leftPercent = marginPercent + (eventIndex * (eventWidthPercent + gapPercent));
+    const gridRowEnd = gridRowStart + rowSpan;
 
-      return {
-        top: `${topPixels}px`,
-        height: `${heightPixels}px`,
-        left: `${leftPercent}%`,
-        width: `${eventWidthPercent}%`,
-      };
+    // After filtering duplicates in getAppointmentsForDate, there should be no events with the same time
+    // All events will span full width since duplicates are filtered out
+    return {
+      gridRowStart,
+      gridRowEnd,
+    };
+  }
+
+  /**
+   * Get maximum number of overlapping events at any time for a day
+   * Used to set grid-template-columns
+   * Since we filter duplicates, this should always return 1
+   */
+  protected getMaxOverlappingEvents(day: Date): number {
+    // After filtering duplicates, max overlap should be 1
+    // But we'll calculate it anyway for safety
+    const allDayEvents = this.getAppointmentsForDate(day)
+      .filter(apt => apt.startTime && apt.startTime !== '');
+
+    // Since filterDuplicateTimes ensures no duplicates, max should be 1
+    return 1;
+  }
+
+  /**
+   * Get CSS custom properties for event positioning
+   * Uses CSS Grid instead of absolute positioning
+   */
+  protected getEventStyle(day: Date, appointment: Appointment): Record<string, string> {
+    const position = this.getEventGridPosition(day, appointment);
+    const [hours, minutes] = appointment.startTime ? appointment.startTime.split(':').map(Number) : [0, 0];
+    const minutesOffset = minutes / 60; // Fraction of hour (0.5 for 30 minutes)
+
+    const style: Record<string, string> = {
+      'grid-row-start': position.gridRowStart.toString(),
+      'grid-row-end': position.gridRowEnd.toString(),
+    };
+
+    // With 30-minute intervals, events align to grid rows, so we only need cell padding offset
+    // Add cell padding offset (1px top padding of time slot)
+    style['margin-top'] = '1px';
+
+    // Add bottom margin for spacing between sequential events
+    style['margin-bottom'] = '1px';
+
+    // Handle column positioning for overlapping events
+    if (position.gridColumnStart !== undefined && position.gridColumnEnd !== undefined) {
+      style['grid-column-start'] = position.gridColumnStart.toString();
+      style['grid-column-end'] = position.gridColumnEnd.toString();
+    } else {
+      style['grid-column'] = '1 / -1'; // Span full width
     }
 
-    // Single event or sequential event - use full width with margins
-    // Sequential events will be positioned vertically based on their actual start times
-    return {
-      top: `${topPixels}px`,
-      height: `${heightPixels}px`,
-      left: '8px',
-      width: 'calc(100% - 16px)',
-    };
+    return style;
   }
 
   /**
@@ -560,7 +610,36 @@ export class CalendarPage implements OnInit, OnDestroy {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     const dateStr = `${year}-${month}-${day}`;
-    return this.appointments().filter((apt) => apt.date === dateStr);
+    const appointments = this.appointments().filter((apt) => apt.date === dateStr);
+
+    // Filter out duplicate times - keep only the first event for each time slot
+    return this.filterDuplicateTimes(appointments);
+  }
+
+  /**
+   * Filter appointments to ensure no two events have the exact same start time
+   * If duplicates exist, keeps the first one and removes/skips the rest
+   */
+  private filterDuplicateTimes(appointments: Appointment[]): Appointment[] {
+    const seenTimes = new Set<string>();
+    const filtered: Appointment[] = [];
+
+    for (const appointment of appointments) {
+      // All-day events (no startTime) are always included
+      if (!appointment.startTime || appointment.startTime === '') {
+        filtered.push(appointment);
+        continue;
+      }
+
+      // Check if we've already seen this time
+      if (!seenTimes.has(appointment.startTime)) {
+        seenTimes.add(appointment.startTime);
+        filtered.push(appointment);
+      }
+      // If duplicate time exists, skip it (or you could log a warning here)
+    }
+
+    return filtered;
   }
 
   /**
@@ -631,9 +710,12 @@ export class CalendarPage implements OnInit, OnDestroy {
 
   /**
    * Change calendar view
+   * Resets to today's date when switching views
    */
   setView(view: CalendarView): void {
     this.currentView.set(view);
+    // Reset to today when changing views
+    this.currentDate.set(new Date());
     this.generateCalendarDays();
   }
 

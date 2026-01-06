@@ -196,7 +196,7 @@
             [class.order-last]="languageService.isRTL()"
           >
             @for (timeSlot of getTimeSlots(); track timeSlot) {
-            <div class="border-b border-gray-200 p-2 min-h-[60px]">
+            <div class="border-b border-gray-200 p-1 h-[30px] flex items-center">
               <div
                 class="text-xs font-medium text-gray-600"
                 [class.text-right]="languageService.isRTL()"
@@ -210,12 +210,14 @@
           <!-- Day Columns -->
           @for (day of calendarDays(); track day.date.getTime()) {
           <div
-            class="border-r border-gray-300 last:border-r-0 rtl:border-r-0 rtl:border-l rtl:last:border-l-0 relative"
+            class="border-r border-gray-300 last:border-r-0 rtl:border-r-0 rtl:border-l rtl:last:border-l-0 calendar-day-grid"
+            [style.grid-template-columns]="'repeat(' + getMaxOverlappingEvents(day.date) + ', 1fr)'"
+            [style.gap]="getMaxOverlappingEvents(day.date) > 1 ? '2px' : '0'"
           >
-            <!-- Time Slot Rows -->
+            <!-- Time Slot Rows (Grid Rows) -->
             @for (timeSlot of getTimeSlots(); track timeSlot; let slotIndex = $index) {
             <div
-              class="border-b border-gray-200 min-h-[60px] relative hover:bg-gray-50 transition-colors cursor-pointer"
+              class="border-b border-gray-200 h-[30px] hover:bg-gray-50 transition-colors cursor-pointer calendar-time-slot"
               (click)="openDayAppointments(day.date)"
             >
               @if (timeSlot === 'All Day') {
@@ -236,16 +238,22 @@
               }
             </div>
             }
-            <!-- Hourly Events (positioned absolutely over the time slots) -->
+            <!-- Hourly Events (using CSS Grid positioning) -->
             @for (appointment of getAppointmentsForDate(day.date); track appointment.id) { @if
             (appointment.startTime && appointment.startTime !== '') {
             <div
-              class="absolute rounded px-4 py-1 text-xs text-white bg-blue-500 cursor-pointer hover:bg-blue-600 transition-colors z-10 shadow-sm"
-              [style]="getEventStyle(day.date, appointment)"
-              [title]="appointment.patientName + ' - ' + appointment.startTime"
+              class="calendar-event rounded px-3 py-2 text-white bg-blue-500 cursor-pointer hover:bg-blue-600 transition-colors shadow-sm overflow-hidden flex flex-col justify-start"
+              [ngStyle]="getEventStyle(day.date, appointment)"
+              [title]="
+                appointment.patientName +
+                ' - ' +
+                formatTime(appointment.startTime) +
+                (appointment.endTime ? ' - ' + formatTime(appointment.endTime) : '')
+              "
             >
-              <div class="font-medium truncate">{{ appointment.patientName }}</div>
-              <div class="text-xs opacity-90">{{ formatTime(appointment.startTime) }}</div>
+              <div class="font-semibold text-sm leading-tight break-word">
+                {{ appointment.patientName }}
+              </div>
             </div>
             } }
           </div>
@@ -271,7 +279,7 @@
           <!-- Time Column -->
           <div class="border-r border-gray-300 w-32 shrink-0 rtl:border-r-0 rtl:border-l">
             @for (timeSlot of getTimeSlots(); track timeSlot) {
-            <div class="border-b border-gray-200 p-3 min-h-[60px]">
+            <div class="border-b border-gray-200 p-2 h-[30px] flex items-center">
               <div
                 class="text-sm font-medium text-gray-700"
                 [class.text-right]="languageService.isRTL()"
@@ -283,11 +291,17 @@
             }
           </div>
           <!-- Events Column -->
-          <div class="relative flex-1">
-            <!-- Time Slot Rows -->
+          <div
+            class="flex-1 calendar-day-grid"
+            [style.grid-template-columns]="
+              'repeat(' + getMaxOverlappingEvents(calendarDays()[0].date) + ', 1fr)'
+            "
+            [style.gap]="getMaxOverlappingEvents(calendarDays()[0].date) > 1 ? '2px' : '0'"
+          >
+            <!-- Time Slot Rows (Grid Rows) -->
             @for (timeSlot of getTimeSlots(); track timeSlot) {
             <div
-              class="border-b border-gray-200 min-h-[60px] relative hover:bg-gray-50 transition-colors cursor-pointer"
+              class="border-b border-gray-200 h-[30px] hover:bg-gray-50 transition-colors cursor-pointer calendar-time-slot"
               (click)="openDayAppointments(calendarDays()[0].date)"
             >
               @if (timeSlot === 'All Day') {
@@ -316,22 +330,21 @@
               }
             </div>
             }
-            <!-- Hourly Events (positioned absolutely over the time slots) -->
+            <!-- Hourly Events (using CSS Grid positioning) -->
             @for (appointment of getAppointmentsForDate(calendarDays()[0].date); track
             appointment.id) { @if (appointment.startTime && appointment.startTime !== '') {
             <div
-              class="absolute rounded px-3 py-2 text-sm text-white bg-blue-500 cursor-pointer hover:bg-blue-600 transition-colors z-10 shadow-sm"
-              [style]="getEventStyle(calendarDays()[0].date, appointment)"
-              [title]="appointment.patientName + ' - ' + appointment.startTime"
+              class="calendar-event rounded px-3 py-2 text-white bg-blue-500 cursor-pointer hover:bg-blue-600 transition-colors shadow-sm overflow-hidden flex flex-col justify-start"
+              [ngStyle]="getEventStyle(calendarDays()[0].date, appointment)"
+              [title]="
+                appointment.patientName +
+                ' - ' +
+                formatTime(appointment.startTime) +
+                (appointment.endTime ? ' - ' + formatTime(appointment.endTime) : '')
+              "
             >
-              <div class="font-medium">{{ appointment.patientName }}</div>
-              <div class="text-xs opacity-90 mt-1">
-                {{ formatTime(appointment.startTime) }} -
-                {{
-                  appointment.endTime
-                    ? formatTime(appointment.endTime)
-                    : formatTime(appointment.startTime) + ' +' + appointment.durationMinutes + 'min'
-                }}
+              <div class="font-semibold text-sm leading-tight break-word">
+                {{ appointment.patientName }}
               </div>
             </div>
             } }
