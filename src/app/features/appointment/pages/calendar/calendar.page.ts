@@ -379,8 +379,8 @@ export class CalendarPage implements OnInit, OnDestroy {
   }
 
   /**
-   * Get events grouped by start time for a specific day
-   * This helps calculate offsets for overlapping events
+   * Get events grouped by exact start time for a specific day
+   * This helps calculate offsets for overlapping events (same start time)
    */
   protected getGroupedEventsByTime(day: Date): Map<string, Appointment[]> {
     const appointments = this.getAppointmentsForDate(day).filter(apt => apt.startTime && apt.startTime !== '');
@@ -398,16 +398,47 @@ export class CalendarPage implements OnInit, OnDestroy {
   }
 
   /**
-   * Get the index of an event within its time group
+   * Get the index of an event within its time group (only for events with exact same start time)
    */
   protected getEventIndexInGroup(day: Date, appointment: Appointment): number {
     const grouped = this.getGroupedEventsByTime(day);
     const timeKey = appointment.startTime || '';
     const eventsAtSameTime = grouped.get(timeKey) || [];
 
+    // Only return index if there are multiple events at the exact same time
+    if (eventsAtSameTime.length <= 1) {
+      return 0;
+    }
+
     // Sort by ID to ensure consistent ordering
     const sorted = [...eventsAtSameTime].sort((a, b) => a.id.localeCompare(b.id));
     return sorted.findIndex(apt => apt.id === appointment.id);
+  }
+
+  /**
+   * Check if two appointments overlap in time
+   */
+  private doAppointmentsOverlap(apt1: Appointment, apt2: Appointment): boolean {
+    if (!apt1.startTime || !apt2.startTime) return false;
+
+    const [h1, m1] = apt1.startTime.split(':').map(Number);
+    const [h2, m2] = apt2.startTime.split(':').map(Number);
+
+    const start1 = h1 * 60 + m1;
+    const end1 = start1 + apt1.durationMinutes;
+    const start2 = h2 * 60 + m2;
+    const end2 = start2 + apt2.durationMinutes;
+
+    // Check if they overlap: start1 < end2 && start2 < end1
+    return start1 < end2 && start2 < end1;
+  }
+
+  /**
+   * Get overlapping events for a given appointment
+   */
+  private getOverlappingEvents(day: Date, appointment: Appointment): Appointment[] {
+    const allAppointments = this.getAppointmentsForDate(day).filter(apt => apt.startTime && apt.startTime !== '');
+    return allAppointments.filter(apt => apt.id !== appointment.id && this.doAppointmentsOverlap(apt, appointment));
   }
 
   /**
@@ -433,20 +464,23 @@ export class CalendarPage implements OnInit, OnDestroy {
     // Calculate height based on duration
     const heightPixels = Math.max((durationHours * slotHeight), 55); // Minimum 30px height
 
-    // Handle overlapping events - stack them side by side
+    // Handle overlapping events - only stack horizontally if they truly overlap
+    // Sequential events (e.g., 10:00 and 10:30) should be positioned vertically
     const grouped = this.getGroupedEventsByTime(day);
-    const eventsAtSameTime = grouped.get(appointment.startTime) || [];
+    const eventsAtSameExactTime = grouped.get(appointment.startTime) || [];
     const eventIndex = this.getEventIndexInGroup(day, appointment);
-    const totalEvents = eventsAtSameTime.length;
+    const totalEventsAtSameTime = eventsAtSameExactTime.length;
 
-    if (totalEvents > 1) {
-      // Multiple events at the same time - stack them horizontally
+    // Only stack horizontally if multiple events have the EXACT same start time
+    // Sequential events (different start times) will be positioned vertically based on their actual times
+    if (totalEventsAtSameTime > 1) {
+      // Multiple events at the exact same time - stack them horizontally
       // Use percentage-based positioning with small gaps
       const gapPercent = 0.5; // Small gap as percentage (0.5% between events)
       const marginPercent = 1; // Margin from edges (1%)
-      const totalGaps = (totalEvents - 1) * gapPercent;
+      const totalGaps = (totalEventsAtSameTime - 1) * gapPercent;
       const availableWidth = 100 - (marginPercent * 2) - totalGaps;
-      const eventWidthPercent = availableWidth / totalEvents;
+      const eventWidthPercent = availableWidth / totalEventsAtSameTime;
 
       // Calculate left position: margin + (index * (width + gap))
       const leftPercent = marginPercent + (eventIndex * (eventWidthPercent + gapPercent));
@@ -459,13 +493,13 @@ export class CalendarPage implements OnInit, OnDestroy {
       };
     }
 
-    // Single event - use full width with small margins
+    // Single event or sequential event - use full width with margins
+    // Sequential events will be positioned vertically based on their actual start times
     return {
       top: `${topPixels}px`,
       height: `${heightPixels}px`,
       left: '8px',
-      right: '8px',
-      width: 'auto',
+      width: 'calc(100% - 16px)',
     };
   }
 
